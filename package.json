@@ -1,0 +1,15 @@
+{
+  "name": "affiliate-discovery-platform",
+  "private": true,
+  "workspaces": ["api", "web"],
+  "scripts": {
+    "dev:api": "cd api && npm run start:dev",
+    "dev:web": "cd web && npm run dev",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "build": "cd api && npm run build && cd ../web && npm run build",
+    "db:migrate": "cd api && npx prisma migrate dev",
+    "db:seed": "cd api && npm run db:seed",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  }
+}

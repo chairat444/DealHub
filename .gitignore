@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Build outputs
+dist/
+.output/
+.nuxt/
+.nitro/
+.cache/
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Test coverage
+coverage/
+
+# Prisma
+api/generated/

@@ -1,0 +1,43 @@
+<template>
+  <div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">❤️ รายการโปรด</h1>
+
+    <div v-if="!authStore.isLoggedIn" class="text-center py-20">
+      <p class="text-gray-500 mb-4">กรุณาเข้าสู่ระบบเพื่อดูรายการโปรด</p>
+      <NuxtLink to="/auth/login" class="btn-primary inline-block">เข้าสู่ระบบ</NuxtLink>
+    </div>
+
+    <div v-else-if="pending" class="text-center py-20 text-gray-400">กำลังโหลด...</div>
+    <div v-else-if="!items?.length" class="text-center py-20">
+      <div class="text-6xl mb-4">❤️</div>
+      <p class="text-gray-500">ยังไม่มีสินค้าในรายการโปรด</p>
+    </div>
+    <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+      <ProductCard
+        v-for="item in items"
+        :key="item.id"
+        :product="item.product"
+      />
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+const authStore = useAuthStore()
+const { apiFetch } = useApi()
+
+interface WishlistItem {
+  id: string
+  product: import('~/types').Product
+}
+
+const { data: items, pending } = await useAsyncData(
+  'wishlist',
+  () => authStore.isLoggedIn
+    ? apiFetch<WishlistItem[]>('/wishlist').catch(() => [])
+    : [],
+  { watch: [() => authStore.isLoggedIn] },
+)
+
+useSeoMeta({ title: 'รายการโปรด - DealHub TH' })
+</script>

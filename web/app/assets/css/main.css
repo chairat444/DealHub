@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --shopee-orange: #EE4D2D;
+    --shopee-orange-dark: #D73211;
+    --shopee-orange-light: #FFF6F4;
+    --shopee-bg: #F5F5F5;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#EE4D2D] hover:bg-[#D73211] text-white font-medium px-6 py-2.5 rounded-sm transition-colors duration-200;
+  }
+
+  .btn-outline {
+    @apply border border-[#EE4D2D] text-[#EE4D2D] hover:bg-[#FFF6F4] font-medium px-6 py-2.5 rounded-sm transition-colors duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-sm shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2.5 border border-gray-200 rounded-sm focus:outline-none focus:border-[#EE4D2D] focus:ring-1 focus:ring-[#EE4D2D] transition-colors;
+  }
+
+  .badge-shopee {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#EE4D2D] text-white;
+  }
+
+  .marketplace-shopee { @apply bg-orange-100 text-orange-700; }
+  .marketplace-lazada { @apply bg-blue-100 text-blue-700; }
+  .marketplace-tiktok { @apply bg-gray-900 text-white; }
+}
