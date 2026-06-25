@@ -72,17 +72,17 @@
 
   .badge-shopee {
     @apply inline-flex items-center px-2.5 py-0.5 rounded text-sm font-medium bg-[#EE4D2D] text-white;
-    @apply dark:bg-shopee/35 dark:text-[rgb(var(--accent-display))];
+    @apply dark:bg-[#e8846f] dark:text-[#1a0806] dark:border dark:border-[#f5b8a8]/50 dark:font-bold;
   }
 
   .badge-hot {
     @apply bg-[#FFD600] text-[#c13515] font-bold;
-    @apply dark:bg-shopee/25 dark:text-[rgb(var(--accent-display))] dark:border dark:border-shopee/30;
+    @apply dark:bg-[#f0a060] dark:text-[#1a0806] dark:border dark:border-[#f5c090]/50 dark:font-bold;
   }
 
   .badge-discount {
     @apply bg-[#d4006a] text-white font-bold;
-    @apply dark:bg-shopee/30 dark:text-[rgb(var(--accent-display))] dark:border dark:border-shopee/25;
+    @apply dark:bg-[#e8846f] dark:text-[#1a0806] dark:border dark:border-[#f5b8a8]/50 dark:shadow-[0_1px_4px_rgba(0,0,0,0.35)];
   }
 
   .text-accent {
@@ -91,7 +91,7 @@
 
   .btn-search {
     @apply bg-[#FFD600] hover:bg-[#f5cc00] text-shopee transition-colors;
-    @apply dark:bg-shopee/35 dark:hover:bg-shopee/45 dark:text-[rgb(var(--accent-display))] dark:border-l dark:border-line;
+    @apply dark:bg-[#e8846f] dark:hover:bg-[#f0997a] dark:text-[#1a0806] dark:border-l dark:border-[#f5b8a8]/40;
   }
 
   .site-header {
@@ -168,5 +168,15 @@
 
   .page-container {
     @apply max-w-7xl mx-auto px-4;
+  }
+
+  .deals-zone-header {
+    @apply bg-gradient-to-r from-[#FFF6F4] to-surface;
+    @apply dark:from-surface-muted dark:to-surface;
+  }
+
+  .board-spotlight-intro {
+    @apply bg-gradient-to-r from-[#FFF6F4] via-surface to-[#FFF9E6];
+    @apply dark:from-surface-muted dark:via-surface dark:to-surface;
   }
 }

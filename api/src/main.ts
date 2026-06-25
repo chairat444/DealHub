@@ -28,7 +28,7 @@ async function bootstrap() {
     .addTag('Authentication', 'ระบบยืนยันตัวตน')
     .addTag('Products', 'สินค้า')
     .addTag('Categories', 'หมวดหมู่')
-    .addTag('Wishlist', 'รายการโปรด')
+    .addTag('Wishlist', 'รายการที่ถูกใจ')
     .addTag('Price Alerts', 'แจ้งเตือนราคา')
     .addTag('Affiliate', 'Affiliate Tracking')
     .addTag('Admin', 'ผู้ดูแลระบบ')

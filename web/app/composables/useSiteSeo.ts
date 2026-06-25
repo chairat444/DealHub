@@ -1,19 +1,24 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { toValue } from 'vue'
+import { SEO } from '~/constants/seo'
 
 export const SITE = {
-  name: 'DealHub TH',
-  shortName: 'DealHub',
-  defaultTitle: 'DealHub TH - เทียบราคาสินค้าจาก Shopee, Lazada, TikTok Shop',
-  defaultDescription:
-    'แพลตฟอร์มเทียบราคาสินค้าออนไลน์ รวบรวมสินค้าจาก Shopee, Lazada, TikTok Shop เปรียบเทียบราคา ดูประวัติราคา และรับแจ้งเตือนเมื่อราคาลด',
-  themeColor: '#EE4D2D',
-  locale: 'th_TH',
+  name: SEO.siteName,
+  shortName: SEO.shortName,
+  defaultTitle: SEO.defaultTitle,
+  defaultDescription: SEO.defaultDescription,
+  homeTitle: SEO.homeTitle,
+  homeDescription: SEO.homeDescription,
+  homeKeywords: SEO.homeKeywords,
+  themeColor: SEO.themeColor,
+  locale: SEO.locale,
+  ogImageAlt: SEO.ogImageAlt,
 } as const
 
 export interface SiteSeoOptions {
   title?: MaybeRefOrGetter<string>
   description?: MaybeRefOrGetter<string>
+  keywords?: MaybeRefOrGetter<string>
   image?: MaybeRefOrGetter<string | null | undefined>
   path?: MaybeRefOrGetter<string>
   noindex?: boolean
@@ -44,6 +49,7 @@ export function useSiteSeo(options: SiteSeoOptions = {}) {
   })
 
   const description = computed(() => toValue(options.description) || SITE.defaultDescription)
+  const keywords = computed(() => toValue(options.keywords))
 
   const ogImage = computed(() => {
     const img = toValue(options.image)
@@ -56,19 +62,22 @@ export function useSiteSeo(options: SiteSeoOptions = {}) {
     return resolveUrl(siteUrl, path)
   })
 
-  const robots = options.noindex ? 'noindex, nofollow' : 'index, follow'
+  const robots = options.noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
 
   useHead({
     title: pageTitle,
     titleTemplate: options.titleFull ? '' : `%s | ${SITE.name}`,
+    htmlAttrs: { lang: 'th' },
     link: [{ rel: 'canonical', href: canonical }],
   })
 
   useSeoMeta({
     description,
+    keywords,
     ogTitle: fullTitle,
     ogDescription: description,
     ogImage,
+    ogImageAlt: SITE.ogImageAlt,
     ogUrl: canonical,
     ogType: 'website',
     ogSiteName: SITE.name,
@@ -105,10 +114,12 @@ export function buildProductJsonLd(product: {
   rating?: number
   reviewCount?: number
 }, siteUrl: string) {
+  const productUrl = `${siteUrl.replace(/\/$/, '')}/products/${product.slug}`
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
+    url: productUrl,
     image: product.imageUrl,
     description: product.description || product.name,
     brand: product.brand ? { '@type': 'Brand', name: product.brand } : undefined,
@@ -118,7 +129,7 @@ export function buildProductJsonLd(product: {
           lowPrice: product.lowestPrice,
           priceCurrency: 'THB',
           availability: 'https://schema.org/InStock',
-          url: `${siteUrl}/products/${product.slug}`,
+          url: productUrl,
         }
       : undefined,
     aggregateRating: product.rating
@@ -131,6 +142,35 @@ export function buildProductJsonLd(product: {
   }
 }
 
+export function buildBreadcrumbJsonLd(
+  items: Array<{ name: string; path: string }>,
+  siteUrl: string,
+) {
+  const base = siteUrl.replace(/\/$/, '')
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: `${base}${item.path.startsWith('/') ? item.path : `/${item.path}`}`,
+    })),
+  }
+}
+
+export function buildOrganizationJsonLd(siteUrl: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE.name,
+    url: siteUrl,
+    logo: `${siteUrl}/og-image.svg`,
+    description: SITE.defaultDescription,
+    sameAs: [],
+  }
+}
+
 export function buildWebsiteJsonLd(siteUrl: string) {
   return {
     '@context': 'https://schema.org',
@@ -139,12 +179,86 @@ export function buildWebsiteJsonLd(siteUrl: string) {
     url: siteUrl,
     description: SITE.defaultDescription,
     inLanguage: 'th',
+    publisher: {
+      '@type': 'Organization',
+      name: SITE.name,
+      url: siteUrl,
+    },
     potentialAction: {
       '@type': 'SearchAction',
-      target: `${siteUrl}/search?q={search_term_string}`,
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteUrl}/search?q={search_term_string}`,
+      },
       'query-input': 'required name=search_term_string',
     },
   }
+}
+
+export function buildWebPageJsonLd(siteUrl: string, title: string, description: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: siteUrl,
+    inLanguage: 'th',
+    isPartOf: {
+      '@type': 'WebSite',
+      name: SITE.name,
+      url: siteUrl,
+    },
+  }
+}
+
+export function buildItemListJsonLd(
+  siteUrl: string,
+  name: string,
+  products: Array<{ name: string; slug: string; lowestPrice?: number | null }>,
+) {
+  if (!products.length) return undefined
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name,
+    numberOfItems: products.length,
+    itemListElement: products.map((product, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: product.name,
+      url: `${siteUrl}/products/${product.slug}`,
+      ...(product.lowestPrice
+        ? {
+            item: {
+              '@type': 'Product',
+              name: product.name,
+              url: `${siteUrl}/products/${product.slug}`,
+              offers: {
+                '@type': 'Offer',
+                price: product.lowestPrice,
+                priceCurrency: 'THB',
+              },
+            },
+          }
+        : {}),
+    })),
+  }
+}
+
+export function buildHomePageJsonLd(
+  siteUrl: string,
+  products: Array<{ name: string; slug: string; lowestPrice?: number | null }>,
+) {
+  const schemas: Record<string, unknown>[] = [
+    buildOrganizationJsonLd(siteUrl),
+    buildWebsiteJsonLd(siteUrl),
+    buildWebPageJsonLd(siteUrl, SITE.homeTitle, SITE.homeDescription),
+  ]
+
+  const itemList = buildItemListJsonLd(siteUrl, 'สินค้าขายดีและมาแรงบน DealHub TH', products)
+  if (itemList) schemas.push(itemList)
+
+  return schemas
 }
 
 export function buildCategoryJsonLd(category: {

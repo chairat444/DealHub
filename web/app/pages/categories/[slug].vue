@@ -21,6 +21,15 @@
       <p v-if="category?._count?.products" class="text-sm text-content-muted mt-2">
         {{ category._count.products }} สินค้าในหมวดนี้
       </p>
+      <ShareButtons
+        v-if="category"
+        class="mt-4"
+        compact
+        :title="`${category.name} — เทียบราคา DealHub TH`"
+        :text="seoDescription"
+        :path="`/categories/${slug}`"
+        label="แชร์หมวดนี้"
+      />
     </header>
 
     <div v-if="pending" class="text-center py-20 text-content-muted">กำลังโหลด...</div>
@@ -51,7 +60,11 @@ const { data: results, pending } = await useAsyncData(
   () => apiFetch<PaginatedResponse<Product>>('/products/search', { query: { category: slug, limit: 20 } }).catch(() => ({ items: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } })),
 )
 
-const seoTitle = computed(() => category.value?.name ? `${category.value.name} - เทียบราคา` : 'หมวดหมู่สินค้า')
+const seoTitle = computed(() =>
+  category.value?.name
+    ? `${category.value.name} — เทียบราคา Shopee Lazada TikTok`
+    : 'หมวดหมู่สินค้า',
+)
 
 const seoDescription = computed(() => {
   if (category.value?.description) return category.value.description
@@ -65,10 +78,17 @@ useSiteSeo({
   title: () => seoTitle.value,
   description: () => seoDescription.value,
   path: () => `/categories/${slug}`,
-  jsonLd: computed(() =>
-    category.value
-      ? buildCategoryJsonLd(category.value, config.public.siteUrl as string)
-      : undefined,
-  ),
+  jsonLd: computed(() => {
+    if (!category.value) return undefined
+    const site = config.public.siteUrl as string
+    return [
+      buildCategoryJsonLd(category.value, site),
+      buildBreadcrumbJsonLd([
+        { name: 'หน้าแรก', path: '/' },
+        { name: 'หมวดหมู่', path: '/search' },
+        { name: category.value.name, path: `/categories/${slug}` },
+      ], site),
+    ]
+  }),
 })
 </script>

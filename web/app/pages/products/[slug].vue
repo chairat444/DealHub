@@ -54,17 +54,25 @@
           </div>
 
           <!-- Actions -->
-          <div class="flex gap-3 mb-6">
-            <button @click="addToCompare" class="btn-outline flex-1" :disabled="compareStore.isFull">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button @click="addToCompare" class="btn-outline flex-1 min-w-[120px]" :disabled="compareStore.isFull">
               📊 เทียบสินค้า
             </button>
-            <button @click="addToWishlist" class="btn-outline flex-1" :disabled="!authStore.isLoggedIn">
-              ❤️ บันทึก
+            <button @click="addToWishlist" class="btn-outline flex-1 min-w-[120px]" :disabled="!authStore.isLoggedIn">
+              ❤️ ถูกใจ
             </button>
-            <button @click="showAlertModal = true" class="btn-outline flex-1" :disabled="!authStore.isLoggedIn">
+            <button @click="showAlertModal = true" class="btn-outline flex-1 min-w-[120px]" :disabled="!authStore.isLoggedIn">
               🔔 แจ้งเตือนราคา
             </button>
           </div>
+
+          <ShareButtons
+            :title="product.name"
+            :text="shareText"
+            :path="`/products/${slug}`"
+            label="แชร์ดีลนี้ให้เพื่อน"
+            class="mb-6"
+          />
 
           <!-- AI Review Summary -->
           <div v-if="aiSummary" class="card p-4 mb-6">
@@ -135,6 +143,13 @@ const { data: aiSummary } = await useAsyncData(
 
 const config = useRuntimeConfig()
 
+const shareText = computed(() => {
+  const p = product.value
+  if (!p) return ''
+  const price = p.lowestPrice ? ` ราคาเริ่มต้น ${p.lowestPrice.toLocaleString('th-TH')} บาท` : ''
+  return `เทียบราคา ${p.name} จาก Shopee, Lazada, TikTok Shop${price} — DealHub TH`
+})
+
 useSiteSeo({
   title: () => product.value?.name || 'สินค้า',
   description: () => {
@@ -145,10 +160,17 @@ useSiteSeo({
   },
   image: () => product.value?.imageUrl,
   path: () => `/products/${slug}`,
-  jsonLd: () =>
-    product.value
-      ? buildProductJsonLd(product.value, config.public.siteUrl as string)
-      : undefined,
+  jsonLd: () => {
+    if (!product.value) return undefined
+    const site = config.public.siteUrl as string
+    return [
+      buildProductJsonLd(product.value, site),
+      buildBreadcrumbJsonLd([
+        { name: 'หน้าแรก', path: '/' },
+        { name: product.value.name, path: `/products/${slug}` },
+      ], site),
+    ]
+  },
 })
 
 const maxPrice = computed(() => {

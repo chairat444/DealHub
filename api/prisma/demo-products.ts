@@ -1,0 +1,305 @@
+import { Marketplace } from '@prisma/client';
+
+type DemoListing = {
+  marketplace: Marketplace;
+  price: number;
+  originalPrice: number;
+  externalId: string;
+  shopName: string;
+};
+
+export type DemoProduct = {
+  name: string;
+  slug: string;
+  brand: string;
+  categorySlug: 'electronics' | 'fashion' | 'beauty' | 'home-living' | 'sports';
+  rating: number;
+  reviewCount: number;
+  soldCount: number;
+  isTrending: boolean;
+  isTopSelling: boolean;
+  imageUrl: string;
+  searchKeywords: string;
+  listings: DemoListing[];
+};
+
+/** Demo catalog — homepage: Flash Sale 6 · มาแรง 6 · ขายดี 10 · แนะนำ 3 */
+export const demoProducts: DemoProduct[] = [
+  {
+    name: 'iPhone 15 Pro Max 256GB',
+    slug: 'iphone-15-pro-max-256gb',
+    brand: 'Apple',
+    categorySlug: 'electronics',
+    rating: 4.8,
+    reviewCount: 1250,
+    soldCount: 8500,
+    isTrending: true,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&q=80',
+    searchKeywords: 'iphone 15 pro max apple สมาร์ทโฟน',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 45900, originalPrice: 48900, externalId: 'shopee-iphone15', shopName: 'Apple Official Store' },
+      { marketplace: Marketplace.LAZADA, price: 46500, originalPrice: 48900, externalId: 'lazada-iphone15', shopName: 'Lazada Apple' },
+      { marketplace: Marketplace.TIKTOK_SHOP, price: 45200, originalPrice: 48900, externalId: 'tiktok-iphone15', shopName: 'TikTok Apple TH' },
+    ],
+  },
+  {
+    name: 'Samsung Galaxy S24 Ultra',
+    slug: 'samsung-galaxy-s24-ultra',
+    brand: 'Samsung',
+    categorySlug: 'electronics',
+    rating: 4.7,
+    reviewCount: 980,
+    soldCount: 6200,
+    isTrending: true,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&q=80',
+    searchKeywords: 'samsung galaxy s24 ultra สมาร์ทโฟน',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 38900, originalPrice: 42900, externalId: 'shopee-s24', shopName: 'Samsung Official' },
+      { marketplace: Marketplace.LAZADA, price: 39500, originalPrice: 42900, externalId: 'lazada-s24', shopName: 'Samsung Lazada' },
+      { marketplace: Marketplace.TIKTOK_SHOP, price: 38400, originalPrice: 42900, externalId: 'tiktok-s24', shopName: 'Samsung TikTok' },
+    ],
+  },
+  {
+    name: 'iPad Air M2 128GB Wi-Fi',
+    slug: 'ipad-air-m2-128gb',
+    brand: 'Apple',
+    categorySlug: 'electronics',
+    rating: 4.8,
+    reviewCount: 740,
+    soldCount: 5100,
+    isTrending: true,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b5?w=400&q=80',
+    searchKeywords: 'ipad air m2 แท็บเล็ต apple',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 22900, originalPrice: 25900, externalId: 'shopee-ipad-air', shopName: 'iStudio TH' },
+      { marketplace: Marketplace.LAZADA, price: 23400, originalPrice: 25900, externalId: 'lazada-ipad-air', shopName: 'Lazada Apple' },
+    ],
+  },
+  {
+    name: 'PlayStation 5 Slim Digital',
+    slug: 'playstation-5-slim-digital',
+    brand: 'Sony',
+    categorySlug: 'electronics',
+    rating: 4.9,
+    reviewCount: 2100,
+    soldCount: 4300,
+    isTrending: true,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1606813907293-d86efa9b94db?w=400&q=80',
+    searchKeywords: 'ps5 playstation 5 คอนโซลเกม',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 14990, originalPrice: 17990, externalId: 'shopee-ps5', shopName: 'GamePro TH' },
+      { marketplace: Marketplace.LAZADA, price: 15490, originalPrice: 17990, externalId: 'lazada-ps5', shopName: 'Lazada Gaming' },
+      { marketplace: Marketplace.TIKTOK_SHOP, price: 14790, originalPrice: 17990, externalId: 'tiktok-ps5', shopName: 'TikTok Game Hub' },
+    ],
+  },
+  {
+    name: 'หูฟัง Bluetooth ANC Pro',
+    slug: 'bluetooth-anc-headphones',
+    brand: 'SoundMax',
+    categorySlug: 'electronics',
+    rating: 4.4,
+    reviewCount: 2100,
+    soldCount: 9800,
+    isTrending: true,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80',
+    searchKeywords: 'หูฟัง bluetooth anc ไร้สาย',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 1290, originalPrice: 2490, externalId: 'shopee-headphone', shopName: 'Audio Shop' },
+      { marketplace: Marketplace.LAZADA, price: 1350, originalPrice: 2490, externalId: 'lazada-headphone', shopName: 'Lazada Audio' },
+      { marketplace: Marketplace.TIKTOK_SHOP, price: 1190, originalPrice: 2490, externalId: 'tiktok-headphone', shopName: 'TikTok Audio' },
+    ],
+  },
+  {
+    name: 'Dyson V12 Detect Slim',
+    slug: 'dyson-v12-detect-slim',
+    brand: 'Dyson',
+    categorySlug: 'home-living',
+    rating: 4.7,
+    reviewCount: 890,
+    soldCount: 3200,
+    isTrending: true,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?w=400&q=80',
+    searchKeywords: 'dyson v12 เครื่องดูดฝุ่น ไร้สาย',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 16900, originalPrice: 21900, externalId: 'shopee-dyson-v12', shopName: 'Home Premium' },
+      { marketplace: Marketplace.LAZADA, price: 17400, originalPrice: 21900, externalId: 'lazada-dyson-v12', shopName: 'Lazada Home' },
+    ],
+  },
+  {
+    name: 'เสื้อยืด Oversize คอตตอน 100%',
+    slug: 'oversize-cotton-tshirt',
+    brand: 'Local Brand',
+    categorySlug: 'fashion',
+    rating: 4.5,
+    reviewCount: 3200,
+    soldCount: 15000,
+    isTrending: true,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80',
+    searchKeywords: 'เสื้อยืด oversize แฟชั่น',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 199, originalPrice: 399, externalId: 'shopee-tshirt', shopName: 'Fashion TH' },
+      { marketplace: Marketplace.TIKTOK_SHOP, price: 179, originalPrice: 399, externalId: 'tiktok-tshirt', shopName: 'TikTok Fashion' },
+    ],
+  },
+  {
+    name: 'Nike Air Force 1 Low White',
+    slug: 'nike-air-force-1-low',
+    brand: 'Nike',
+    categorySlug: 'fashion',
+    rating: 4.6,
+    reviewCount: 1800,
+    soldCount: 7600,
+    isTrending: true,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&q=80',
+    searchKeywords: 'nike air force 1 รองเท้า สเนกเกอร์',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 2890, originalPrice: 3990, externalId: 'shopee-af1', shopName: 'Sneaker House' },
+      { marketplace: Marketplace.LAZADA, price: 2990, originalPrice: 3990, externalId: 'lazada-af1', shopName: 'Lazada Sport' },
+    ],
+  },
+  {
+    name: 'เซรั่มวิตามินซี บำรุงผิว',
+    slug: 'vitamin-c-serum',
+    brand: 'Beauty Pro',
+    categorySlug: 'beauty',
+    rating: 4.6,
+    reviewCount: 5600,
+    soldCount: 22000,
+    isTrending: true,
+    isTopSelling: false,
+    imageUrl: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&q=80',
+    searchKeywords: 'เซรั่ม วิตามินซี บำรุงผิว ความงาม',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 299, originalPrice: 590, externalId: 'shopee-serum', shopName: 'Beauty Store' },
+      { marketplace: Marketplace.LAZADA, price: 320, originalPrice: 590, externalId: 'lazada-serum', shopName: 'Lazada Beauty' },
+    ],
+  },
+  {
+    name: 'ลิปทินท์ 4U2 You Better',
+    slug: '4u2-lip-tint-you-better',
+    brand: '4U2',
+    categorySlug: 'beauty',
+    rating: 4.5,
+    reviewCount: 4200,
+    soldCount: 18500,
+    isTrending: true,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1586495777744-4413d210d8fc?w=400&q=80',
+    searchKeywords: 'ลิปทินท์ 4u2 เครื่องสำอาง',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 129, originalPrice: 249, externalId: 'shopee-4u2-lip', shopName: '4U2 Official' },
+      { marketplace: Marketplace.TIKTOK_SHOP, price: 119, originalPrice: 249, externalId: 'tiktok-4u2-lip', shopName: 'TikTok Beauty' },
+    ],
+  },
+  {
+    name: 'Stanley Quencher 40oz',
+    slug: 'stanley-quencher-40oz',
+    brand: 'Stanley',
+    categorySlug: 'sports',
+    rating: 4.7,
+    reviewCount: 2900,
+    soldCount: 11200,
+    isTrending: true,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&q=80',
+    searchKeywords: 'stanley กระบอกน้ำ tumbler',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 1590, originalPrice: 2290, externalId: 'shopee-stanley', shopName: 'Outdoor Life' },
+      { marketplace: Marketplace.LAZADA, price: 1690, originalPrice: 2290, externalId: 'lazada-stanley', shopName: 'Lazada Outdoor' },
+    ],
+  },
+  {
+    name: 'หม้อทอดไร้น้ำมัน Philips HD9252',
+    slug: 'philips-air-fryer-hd9252',
+    brand: 'Philips',
+    categorySlug: 'home-living',
+    rating: 4.6,
+    reviewCount: 3500,
+    soldCount: 8900,
+    isTrending: true,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1585515320310-259814833e62?w=400&q=80',
+    searchKeywords: 'หม้อทอดไร้น้ำมัน air fryer philips',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 2790, originalPrice: 3990, externalId: 'shopee-airfryer', shopName: 'Kitchen Pro' },
+      { marketplace: Marketplace.LAZADA, price: 2890, originalPrice: 3990, externalId: 'lazada-airfryer', shopName: 'Lazada Kitchen' },
+      { marketplace: Marketplace.TIKTOK_SHOP, price: 2690, originalPrice: 3990, externalId: 'tiktok-airfryer', shopName: 'TikTok Home' },
+    ],
+  },
+  {
+    name: 'โซฟา 3 ที่นั่ง ผ้ากำมะหยี่',
+    slug: 'velvet-sofa-3-seater',
+    brand: 'HomeStyle',
+    categorySlug: 'home-living',
+    rating: 4.3,
+    reviewCount: 450,
+    soldCount: 1200,
+    isTrending: false,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80',
+    searchKeywords: 'โซฟา บ้าน เฟอร์นิเจอร์',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 12900, originalPrice: 18900, externalId: 'shopee-sofa', shopName: 'Home Furniture' },
+      { marketplace: Marketplace.LAZADA, price: 13500, originalPrice: 18900, externalId: 'lazada-sofa', shopName: 'Lazada Home' },
+    ],
+  },
+  {
+    name: 'เก้าอี้เกมมิ่ง Ergo Pro',
+    slug: 'ergo-pro-gaming-chair',
+    brand: 'ErgoPro',
+    categorySlug: 'sports',
+    rating: 4.4,
+    reviewCount: 680,
+    soldCount: 2400,
+    isTrending: false,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=400&q=80',
+    searchKeywords: 'เก้าอี้เกมมิ่ง เก้าอี้ทำงาน',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 4590, originalPrice: 6990, externalId: 'shopee-gaming-chair', shopName: 'Game Setup TH' },
+      { marketplace: Marketplace.LAZADA, price: 4790, originalPrice: 6990, externalId: 'lazada-gaming-chair', shopName: 'Lazada Office' },
+    ],
+  },
+  {
+    name: 'Apple Watch Series 9 GPS 41mm',
+    slug: 'apple-watch-series-9-41mm',
+    brand: 'Apple',
+    categorySlug: 'electronics',
+    rating: 4.8,
+    reviewCount: 920,
+    soldCount: 3800,
+    isTrending: false,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=400&q=80',
+    searchKeywords: 'apple watch series 9 นาฬิกาอัจฉริยะ',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 11900, originalPrice: 13900, externalId: 'shopee-aw-s9', shopName: 'iStudio TH' },
+      { marketplace: Marketplace.LAZADA, price: 12100, originalPrice: 13900, externalId: 'lazada-aw-s9', shopName: 'Lazada Apple' },
+    ],
+  },
+  {
+    name: 'หุ่นยนต์ดูดฝุ่น Xiaomi Robot Vacuum',
+    slug: 'xiaomi-robot-vacuum-s10',
+    brand: 'Xiaomi',
+    categorySlug: 'home-living',
+    rating: 4.5,
+    reviewCount: 1100,
+    soldCount: 4100,
+    isTrending: false,
+    isTopSelling: true,
+    imageUrl: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?w=400&q=80',
+    searchKeywords: 'หุ่นยนต์ดูดฝุ่น xiaomi robot vacuum',
+    listings: [
+      { marketplace: Marketplace.SHOPEE, price: 6990, originalPrice: 9990, externalId: 'shopee-xiaomi-vac', shopName: 'Mi Store TH' },
+      { marketplace: Marketplace.TIKTOK_SHOP, price: 6790, originalPrice: 9990, externalId: 'tiktok-xiaomi-vac', shopName: 'TikTok Mi Official' },
+    ],
+  },
+];

@@ -3,12 +3,21 @@
     <div class="board-header py-6">
       <div class="page-container">
         <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-2">
-          <MessageCircle class="w-7 h-7" />
-          บอร์ดชุมชน
+          <MessageCircle class="w-7 h-7" aria-hidden="true" />
+          {{ HOME_HEADINGS.board }}
         </h1>
         <p class="text-base text-white/85 mt-1">
           พูดคุยกับคนไทย — อ่านรีวิว ถามก่อนซื้อ แชร์ประสบการณ์ช้อปออนไลน์
         </p>
+        <div class="mt-4 bg-white/10 rounded-lg p-3 backdrop-blur-sm">
+          <ShareButtons
+            compact
+            title="บอร์ดชุมชน DealHub TH"
+            text="พูดคุย แชร์รีวิว และเทียบราคาสินค้ากับคนไทย"
+            path="/board"
+            label="แชร์บอร์ดนี้"
+          />
+        </div>
       </div>
     </div>
 
@@ -83,9 +92,10 @@ import {
   getPostsByGroup,
   type BoardGroupId,
 } from '~/data/board-preview'
+import { HOME_HEADINGS } from '~/constants/seo'
 
 useSiteSeo({
-  title: 'บอร์ดชุมชน',
+  title: 'บอร์ดชุมชน — รีวิวและแนะนำสินค้า',
   description: 'พูดคุยกับคนไทย แชร์รีวิวสินค้า เทียบราคา และแนะนำของดีจาก Shopee, Lazada, TikTok Shop',
   path: '/board',
 })

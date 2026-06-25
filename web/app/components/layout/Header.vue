@@ -28,8 +28,8 @@
           </NuxtLink>
 
           <NuxtLink to="/wishlist" class="nav-act relative hidden sm:flex">
-            <Heart class="w-5 h-5" />
-            <span>วิชลิสต์</span>
+            <Heart class="w-5 h-5 nav-act-icon" :class="wishlistCount > 0 ? 'fill-white/25' : ''" />
+            <span>ถูกใจ</span>
             <span
               v-if="wishlistCount > 0"
               class="absolute -top-1 -right-1.5 bg-[#FFD600] dark:bg-shopee/40 text-shopee dark:text-[rgb(var(--accent-display))] rounded-full text-xs font-bold px-1.5 min-w-5 text-center"
@@ -109,7 +109,14 @@ function handleSearch() {
 
 <style scoped>
 .nav-act {
-  @apply flex flex-col items-center gap-1 text-sm opacity-90 hover:opacity-100 transition-opacity;
+  @apply flex flex-col items-center gap-1 text-sm transition-opacity;
+  @apply text-white opacity-100 hover:opacity-100;
+  @apply dark:text-content dark:opacity-90 dark:hover:opacity-100;
+}
+
+.nav-act-icon {
+  @apply stroke-[2] drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)];
+  @apply dark:drop-shadow-none dark:stroke-[1.75];
 }
 .subnav-item {
   @apply text-white dark:text-content-muted px-3 h-full flex items-center opacity-85 hover:opacity-100 hover:bg-white/10 dark:hover:bg-white/5 transition-colors;

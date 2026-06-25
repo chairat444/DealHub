@@ -10,19 +10,19 @@ export class WishlistController {
   constructor(private wishlistService: WishlistService) {}
 
   @Get()
-  @ApiOperation({ summary: 'รายการสินค้าที่บันทึก' })
+  @ApiOperation({ summary: 'รายการสินค้าที่ถูกใจ' })
   getWishlist(@CurrentUser('id') userId: string) {
     return this.wishlistService.getUserWishlist(userId);
   }
 
   @Post()
-  @ApiOperation({ summary: 'เพิ่มสินค้าในรายการโปรด' })
+  @ApiOperation({ summary: 'เพิ่มสินค้าในรายการที่ถูกใจ' })
   add(@CurrentUser('id') userId: string, @Body('productId') productId: string) {
     return this.wishlistService.add(userId, productId);
   }
 
   @Delete(':productId')
-  @ApiOperation({ summary: 'ลบสินค้าจากรายการโปรด' })
+  @ApiOperation({ summary: 'ลบสินค้าจากรายการที่ถูกใจ' })
   remove(@CurrentUser('id') userId: string, @Param('productId') productId: string) {
     return this.wishlistService.remove(userId, productId);
   }

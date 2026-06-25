@@ -8,11 +8,11 @@
         <Zap class="w-3.5 h-3.5" />
         Flash Deal วันนี้เท่านั้น
       </span>
-      <h1 class="relative z-10 text-white text-3xl lg:text-4xl font-bold leading-tight max-w-md">
-        ลดสูงสุด 80%<br>ทุก Platform
+      <h1 class="relative z-10 text-white text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight max-w-lg">
+        {{ HOME_HEADINGS.heroH1 }}
       </h1>
-      <p class="relative z-10 text-white/85 text-base mt-2 max-w-sm">
-        เปรียบราคา Shopee · Lazada · TikTok ในที่เดียว
+      <p class="relative z-10 text-white/90 text-base sm:text-lg mt-2 max-w-md">
+        {{ HOME_HEADINGS.heroSub }}
       </p>
       <NuxtLink
         to="/search"
@@ -81,6 +81,7 @@
 import { ArrowRight, ChevronRight, Star, Users, Zap } from 'lucide-vue-next'
 import type { Product } from '~/types'
 import { boardPreviewPosts } from '~/data/board-preview'
+import { HOME_HEADINGS } from '~/constants/seo'
 
 defineProps<{
   topProduct?: Product | null

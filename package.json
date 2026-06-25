@@ -3,8 +3,8 @@
   "private": true,
   "workspaces": ["api", "web"],
   "scripts": {
-    "dev:api": "cd api && npm run start:dev",
-    "dev:web": "cd web && npm run dev",
+    "dev:api": "npm run start:dev -w api",
+    "dev:web": "npm run dev -w web",
     "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
     "build": "cd api && npm run build && cd ../web && npm run build",
     "db:migrate": "cd api && npx prisma migrate dev",

@@ -12,11 +12,11 @@ export default defineEventHandler(async (event) => {
   const siteUrl = config.public.siteUrl.replace(/\/$/, '')
   const apiBase = config.public.apiBase
 
-  const staticPaths = ['/', '/search', '/board', '/compare']
+  const staticPaths = ['/', '/search', '/board']
 
   const [trending, topSelling, categories] = await Promise.all([
-    $fetch<ProductItem[]>(`${apiBase}/products/trending`).catch(() => []),
-    $fetch<ProductItem[]>(`${apiBase}/products/top-selling`).catch(() => []),
+    $fetch<ProductItem[]>(`${apiBase}/products/trending?limit=50`).catch(() => []),
+    $fetch<ProductItem[]>(`${apiBase}/products/top-selling?limit=50`).catch(() => []),
     $fetch<CategoryItem[]>(`${apiBase}/categories`).catch(() => []),
   ])
 

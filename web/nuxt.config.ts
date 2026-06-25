@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { SEO } from './app/constants/seo'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -14,20 +16,27 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'th' },
-      title: 'DealHub TH',
+      title: SEO.shortName,
       titleTemplate: '%s | DealHub TH',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'theme-color', content: '#EE4D2D' },
-        { name: 'description', content: 'แพลตฟอร์มเทียบราคาสินค้าออนไลน์ รวบรวมสินค้าจาก Shopee, Lazada, TikTok Shop เปรียบเทียบราคา ดูประวัติราคา และรับแจ้งเตือนเมื่อราคาลด' },
-        { name: 'author', content: 'DealHub TH' },
+        { name: 'theme-color', content: SEO.themeColor },
+        { name: 'description', content: SEO.defaultDescription },
+        { name: 'keywords', content: SEO.homeKeywords },
+        { name: 'author', content: SEO.siteName },
         { name: 'format-detection', content: 'telephone=no' },
-        { property: 'og:site_name', content: 'DealHub TH' },
-        { property: 'og:locale', content: 'th_TH' },
+        { property: 'og:site_name', content: SEO.siteName },
+        { property: 'og:locale', content: SEO.locale },
         { property: 'og:type', content: 'website' },
+        { property: 'og:title', content: SEO.homeTitle },
+        { property: 'og:description', content: SEO.homeDescription },
+        { property: 'og:image', content: '/og-image.svg' },
+        { property: 'og:image:alt', content: SEO.ogImageAlt },
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'robots', content: 'index, follow' },
+        { name: 'twitter:title', content: SEO.homeTitle },
+        { name: 'twitter:description', content: SEO.homeDescription },
+        { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' },
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },

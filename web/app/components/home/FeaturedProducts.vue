@@ -6,9 +6,9 @@
           <span class="bg-shopee/10 text-shopee dark:bg-shopee/20 dark:text-shopee/90 text-xs font-bold px-2.5 py-1 rounded uppercase tracking-wide">
             Hot Pick
           </span>
-          <h2 class="text-xl font-bold text-content">สินค้าแนะนำวันนี้</h2>
+          <h2 class="text-xl font-bold text-content">{{ HOME_HEADINGS.featured }}</h2>
         </div>
-        <p class="text-sm text-content-muted mt-1">คัดสรรสินค้าขายดี ราคาดีที่สุดจากทุกแพลตฟอร์ม</p>
+        <p class="text-sm text-content-muted mt-1">คัดสรรสินค้าขายดี เทียบราคา Shopee Lazada TikTok Shop ก่อนซื้อ</p>
       </div>
       <NuxtLink to="/search?sort=sold" class="text-sm text-shopee font-semibold hover:underline shrink-0">
         ดูทั้งหมด →
@@ -102,6 +102,7 @@
 <script setup lang="ts">
 import { Crown } from 'lucide-vue-next'
 import type { Product } from '~/types'
+import { HOME_HEADINGS } from '~/constants/seo'
 import { formatSoldCount, getDiscountPercent, getLowestListing } from '~/composables/useProductHelpers'
 
 defineProps<{

@@ -111,16 +111,18 @@ export class ProductsService {
   }
 
   async getTrending(limit = 12) {
-    const cacheKey = `trending:${limit}`;
+    const take = Math.min(Number(limit) || 12, 50);
+    const cacheKey = `trending:${take}`;
     const cached = await this.cache.get(cacheKey);
     if (cached) return cached;
 
     const items = await this.prisma.product.findMany({
       where: { isTrending: true },
       orderBy: { soldCount: 'desc' },
-      take: limit,
+      take,
       include: {
-        listings: { where: { isAvailable: true }, orderBy: { price: 'asc' }, take: 1 },
+        category: { select: { id: true, name: true, slug: true } },
+        listings: { where: { isAvailable: true }, orderBy: { price: 'asc' }, take: 3 },
       },
     });
 
@@ -130,16 +132,18 @@ export class ProductsService {
   }
 
   async getTopSelling(limit = 12) {
-    const cacheKey = `top-selling:${limit}`;
+    const take = Math.min(Number(limit) || 12, 50);
+    const cacheKey = `top-selling:${take}`;
     const cached = await this.cache.get(cacheKey);
     if (cached) return cached;
 
     const items = await this.prisma.product.findMany({
       where: { isTopSelling: true },
       orderBy: { soldCount: 'desc' },
-      take: limit,
+      take,
       include: {
-        listings: { where: { isAvailable: true }, orderBy: { price: 'asc' }, take: 1 },
+        category: { select: { id: true, name: true, slug: true } },
+        listings: { where: { isAvailable: true }, orderBy: { price: 'asc' }, take: 3 },
       },
     });
 

@@ -23,7 +23,7 @@
           <ul class="space-y-2 text-base">
             <li><NuxtLink to="/search" class="hover:text-white dark:hover:text-content">ค้นหาสินค้า</NuxtLink></li>
             <li><NuxtLink to="/compare" class="hover:text-white dark:hover:text-content">เปรียบเทียบสินค้า</NuxtLink></li>
-            <li><NuxtLink to="/wishlist" class="hover:text-white dark:hover:text-content">รายการโปรด</NuxtLink></li>
+            <li><NuxtLink to="/wishlist" class="hover:text-white dark:hover:text-content">รายการที่ถูกใจ</NuxtLink></li>
           </ul>
         </div>
         <div>

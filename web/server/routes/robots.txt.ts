@@ -6,6 +6,7 @@ export default defineEventHandler((event) => {
 Allow: /
 Disallow: /admin
 Disallow: /auth/
+Disallow: /compare
 Disallow: /wishlist
 Disallow: /notifications
 

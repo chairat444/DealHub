@@ -10,25 +10,20 @@
 
       <HomeCategorySection :categories="categories || []" />
 
-      <!-- สินค้ามาแรง + Flash Sale แยกกัน ไม่ต้องสลับแท็บ -->
-      <HomeTrendingSection
-        v-if="trendingProducts.length"
-        :products="trendingProducts"
+      <HomeDealsZone
+        v-if="hasDealsContent"
+        :flash-products="flashSaleProducts"
+        :trending-products="trendingProducts"
+        :best-sellers="bestSellers"
       />
 
-      <HomeFlashSaleSection
-        v-if="flashSaleProducts.length"
-        :products="flashSaleProducts"
-      />
-
-      <!-- Desktop: ขายดี + Board คู่กัน -->
-      <div class="grid grid-cols-1 xl:grid-cols-[340px_1fr] gap-3 mb-2.5">
-        <HomeBestSellerPanel
-          v-if="topSelling?.length"
-          :products="topSelling.slice(0, 5)"
-        />
-        <HomeBoardCommunity compact />
+      <div class="deals-board-divider my-5 flex items-center gap-3" aria-hidden="true">
+        <div class="flex-1 h-px bg-line" />
+        <span class="text-sm font-semibold text-content-muted px-2">ชุมชนผู้ช้อป</span>
+        <div class="flex-1 h-px bg-line" />
       </div>
+
+      <HomeBoardSpotlight />
     </div>
 
     <HomeMobileBottomNav />
@@ -37,32 +32,73 @@
 
 <script setup lang="ts">
 import type { Category, Product } from '~/types'
+import { HOME_PRODUCT_LIMITS } from '~/constants/home'
 import { getDiscountPercent } from '~/composables/useProductHelpers'
 
 const { apiFetch } = useApi()
 const config = useRuntimeConfig()
+const siteUrl = config.public.siteUrl as string
 
-useSiteSeo({
-  titleFull: true,
-  title: SITE.defaultTitle,
-  description: SITE.defaultDescription,
-  jsonLd: buildWebsiteJsonLd(config.public.siteUrl as string),
-})
+const apiLimit = Math.max(
+  HOME_PRODUCT_LIMITS.trending,
+  HOME_PRODUCT_LIMITS.flashSale,
+  HOME_PRODUCT_LIMITS.bestSellers,
+  HOME_PRODUCT_LIMITS.featured,
+)
 
 const [{ data: categories }, { data: trending }, { data: topSelling }] = await Promise.all([
   useAsyncData('home-categories', () => apiFetch<Category[]>('/categories').catch(() => [])),
-  useAsyncData('home-trending', () => apiFetch<Product[]>('/products/trending').catch(() => [])),
-  useAsyncData('home-top-selling', () => apiFetch<Product[]>('/products/top-selling').catch(() => [])),
+  useAsyncData('home-trending', () =>
+    apiFetch<Product[]>(`/products/trending?limit=${apiLimit}`).catch(() => []),
+  ),
+  useAsyncData('home-top-selling', () =>
+    apiFetch<Product[]>(`/products/top-selling?limit=${apiLimit}`).catch(() => []),
+  ),
 ])
 
-const HOME_SECTION_LIMIT = 6
+const featuredProducts = computed(() =>
+  (topSelling.value || []).slice(0, HOME_PRODUCT_LIMITS.featured),
+)
 
-const featuredProducts = computed(() => (topSelling.value || []).slice(0, 3))
-const trendingProducts = computed(() => (trending.value || []).slice(0, HOME_SECTION_LIMIT))
+const trendingProducts = computed(() =>
+  (trending.value || []).slice(0, HOME_PRODUCT_LIMITS.trending),
+)
+
 const flashSaleProducts = computed(() => {
   const items = trending.value || []
-  const discounted = items.filter(p => getDiscountPercent(p) > 0)
-  const pool = discounted.length >= 3 ? discounted : items
-  return pool.slice(0, HOME_SECTION_LIMIT)
+  const discounted = items
+    .filter((p) => getDiscountPercent(p) > 0)
+    .sort((a, b) => getDiscountPercent(b) - getDiscountPercent(a))
+  const pool = discounted.length >= HOME_PRODUCT_LIMITS.flashSale ? discounted : items
+  return pool.slice(0, HOME_PRODUCT_LIMITS.flashSale)
+})
+
+const bestSellers = computed(() =>
+  (topSelling.value || []).slice(0, HOME_PRODUCT_LIMITS.bestSellers),
+)
+
+const hasDealsContent = computed(() =>
+  flashSaleProducts.value.length > 0
+  || trendingProducts.value.length > 0
+  || bestSellers.value.length > 0,
+)
+
+const seoProductList = computed(() => {
+  const seen = new Set<string>()
+  const merged = [...(topSelling.value || []), ...(trending.value || [])]
+  return merged.filter((p) => {
+    if (seen.has(p.id)) return false
+    seen.add(p.id)
+    return true
+  }).slice(0, 12)
+})
+
+useSiteSeo({
+  titleFull: true,
+  title: SITE.homeTitle,
+  description: SITE.homeDescription,
+  keywords: SITE.homeKeywords,
+  path: '/',
+  jsonLd: computed(() => buildHomePageJsonLd(siteUrl, seoProductList.value)),
 })
 </script>

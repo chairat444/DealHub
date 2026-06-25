@@ -25,10 +25,11 @@
 
       <button
         type="button"
-        class="absolute top-2 right-2 text-white/80 hover:text-white z-10 drop-shadow"
+        class="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/45 text-white shadow-md backdrop-blur-[2px] transition-colors hover:bg-black/60"
+        aria-label="ถูกใจ"
         @click.prevent
       >
-        <Heart class="w-5 h-5" />
+        <Heart class="w-4 h-4 stroke-[2]" />
       </button>
     </div>
 
@@ -97,7 +98,7 @@ const badgeLabel = computed(() => {
 
 const badgeClass = computed(() => {
   if (discount.value && discount.value >= 40) return 'badge-discount'
-  if (props.product.isTrending) return 'bg-shopee dark:bg-shopee/35 dark:text-[rgb(var(--accent-display))]'
+  if (props.product.isTrending) return 'badge-shopee'
   return 'bg-[#26aa99] dark:bg-teal-900/40 dark:text-teal-300'
 })
 

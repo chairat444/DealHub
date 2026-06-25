@@ -2,8 +2,8 @@
   <section class="section-card px-4 py-3.5 mb-2.5">
     <div class="flex items-center justify-between mb-3">
       <h2 class="text-lg font-bold text-accent flex items-center gap-2">
-        <LayoutGrid class="w-5 h-5" />
-        หมวดหมู่สินค้า
+        <LayoutGrid class="w-5 h-5" aria-hidden="true" />
+        {{ HOME_HEADINGS.categories }}
       </h2>
       <NuxtLink to="/search" class="text-sm text-accent flex items-center gap-0.5 hover:underline">
         ดูทั้งหมด
@@ -31,6 +31,7 @@
 <script setup lang="ts">
 import { ChevronRight, LayoutGrid } from 'lucide-vue-next'
 import type { Category } from '~/types'
+import { HOME_HEADINGS } from '~/constants/seo'
 
 const props = defineProps<{
   categories: Category[]
