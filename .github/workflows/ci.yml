@@ -47,9 +47,6 @@ jobs:
 
   web-test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
 
     steps:
       - uses: actions/checkout@v4
@@ -57,10 +54,11 @@ jobs:
         with:
           node-version: '22.12'
           cache: 'npm'
-          cache-dependency-path: web/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - run: npm ci
       - run: npm run build
+        working-directory: web
         env:
           NUXT_PUBLIC_API_BASE: http://localhost:3001/api/v1
           NUXT_PUBLIC_SITE_URL: http://localhost:3000
