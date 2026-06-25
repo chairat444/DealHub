@@ -8,7 +8,9 @@
     "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
     "build": "cd api && npm run build && cd ../web && npm run build",
     "db:migrate": "cd api && npx prisma migrate dev",
+    "db:deploy": "cd api && npx prisma migrate deploy",
     "db:seed": "cd api && npm run db:seed",
+    "db:setup": "bash api/scripts/db-setup.sh",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down"
   }

@@ -33,6 +33,7 @@ async function bootstrap() {
     .addTag('Affiliate', 'Affiliate Tracking')
     .addTag('Admin', 'ผู้ดูแลระบบ')
     .addTag('AI Reviews', 'สรุปรีวิว AI')
+    .addTag('Board', 'บอร์ดชุมชน')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

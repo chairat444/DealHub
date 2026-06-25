@@ -1,6 +1,7 @@
 import { PrismaClient, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { demoProducts } from './demo-products';
+import { boardDemoUsers, boardGroupDefs, boardPostSeeds } from './demo-board';
 
 const prisma = new PrismaClient();
 
@@ -119,8 +120,96 @@ async function main() {
   const trendingCount = demoProducts.filter((p) => p.isTrending).length;
   const topSellingCount = demoProducts.filter((p) => p.isTopSelling).length;
 
+  console.log('📋 Seeding board...');
+
+  const demoPassword = await bcrypt.hash('user123456', 12);
+  const userByEmail: Record<string, { id: string }> = {
+    'user@dealhub.th': (await prisma.user.findUnique({ where: { email: 'user@dealhub.th' } }))!,
+  };
+
+  for (const demoUser of boardDemoUsers) {
+    const user = await prisma.user.upsert({
+      where: { email: demoUser.email },
+      update: { name: demoUser.name },
+      create: {
+        email: demoUser.email,
+        passwordHash: demoPassword,
+        name: demoUser.name,
+        role: UserRole.USER,
+        emailVerified: true,
+      },
+    });
+    userByEmail[demoUser.email] = user;
+  }
+
+  const groupBySlug: Record<string, { id: string }> = {};
+  for (const group of boardGroupDefs) {
+    const row = await prisma.boardGroup.upsert({
+      where: { slug: group.slug },
+      update: {
+        name: group.name,
+        icon: group.icon,
+        description: group.description,
+        color: group.color,
+        bg: group.bg,
+        sortOrder: group.sortOrder,
+      },
+      create: group,
+    });
+    groupBySlug[group.slug] = row;
+  }
+
+  await prisma.boardComment.deleteMany();
+  await prisma.boardPostUpvote.deleteMany();
+  await prisma.boardPost.deleteMany();
+
+  const productBySlug = Object.fromEntries(
+    (await prisma.product.findMany({ select: { id: true, slug: true } })).map((p) => [p.slug, p.id]),
+  );
+
+  for (const seed of boardPostSeeds) {
+    const author = userByEmail[seed.authorEmail];
+    const group = groupBySlug[seed.groupSlug];
+    if (!author || !group) continue;
+
+    const createdAt = new Date(Date.now() - seed.hoursAgo * 60 * 60 * 1000);
+    const commentCount = seed.seedComments?.length ?? seed.commentCount;
+
+    const post = await prisma.boardPost.create({
+      data: {
+        groupId: group.id,
+        userId: author.id,
+        productId: seed.productSlug ? productBySlug[seed.productSlug] : undefined,
+        title: seed.title,
+        excerpt: seed.excerpt,
+        body: seed.body,
+        upvoteCount: seed.upvoteCount,
+        commentCount,
+        isHot: seed.isHot ?? seed.upvoteCount >= 150,
+        createdAt,
+        updatedAt: createdAt,
+      },
+    });
+
+    if (seed.seedComments?.length) {
+      for (const comment of seed.seedComments) {
+        const commentAuthor = userByEmail[comment.authorEmail];
+        if (!commentAuthor) continue;
+        await prisma.boardComment.create({
+          data: {
+            postId: post.id,
+            userId: commentAuthor.id,
+            body: comment.body,
+            createdAt: new Date(Date.now() - comment.hoursAgo * 60 * 60 * 1000),
+          },
+        });
+      }
+    }
+  }
+
   console.log('✅ Seed completed!');
   console.log(`   Products: ${demoProducts.length} (${trendingCount} trending, ${topSellingCount} top-selling)`);
+  console.log(`   Board: ${boardGroupDefs.length} groups, ${boardPostSeeds.length} posts`);
   console.log(`   Homepage: Flash Sale 6 · มาแรง 6 · ขายดี 10 · แนะนำ 3`);
   console.log(`   Admin: admin@dealhub.th / admin123456`);
   console.log(`   User:  user@dealhub.th / user123456`);

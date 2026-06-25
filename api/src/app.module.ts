@@ -13,6 +13,7 @@ import { PriceAlertsModule } from './modules/price-alerts/price-alerts.module';
 import { AffiliateModule } from './modules/affiliate/affiliate.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { AiReviewsModule } from './modules/ai-reviews/ai-reviews.module';
+import { BoardModule } from './modules/board/board.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 
@@ -31,6 +32,7 @@ import { RolesGuard } from './common/guards/roles.guard';
     AffiliateModule,
     AdminModule,
     AiReviewsModule,
+    BoardModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

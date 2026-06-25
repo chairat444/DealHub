@@ -57,22 +57,29 @@
         </span>
       </NuxtLink>
 
-      <div class="rounded-xl p-4 flex-1 flex flex-col justify-between bg-[#D1ECF1] dark-card border border-transparent hover:shadow-md transition-shadow min-h-[140px] lg:min-h-0 lg:flex-1">
-        <div>
-          <div class="text-xs font-bold text-[#0c5460] dark:text-content-muted uppercase tracking-wide flex items-center gap-1">
-            <Users class="w-3.5 h-3.5" />
-            แนะนำจากบอร์ด
+        <NuxtLink
+          v-if="boardHighlight"
+          :to="`/board/posts/${boardHighlight.id}`"
+          class="rounded-xl p-4 flex-1 flex flex-col justify-between bg-[#D1ECF1] dark-card border border-transparent hover:shadow-md transition-shadow min-h-[140px] lg:min-h-0 lg:flex-1"
+        >
+          <div>
+            <div class="text-xs font-bold text-[#0c5460] dark:text-content-muted uppercase tracking-wide flex items-center gap-1">
+              <Users class="w-3.5 h-3.5" />
+              แนะนำจากบอร์ด
+            </div>
+            <div class="text-base font-bold text-content mt-1.5 leading-snug line-clamp-2">
+              {{ boardHighlight.title }}
+            </div>
+            <div class="text-sm text-content-muted mt-1 flex items-center gap-2">
+              <span>↑ {{ boardHighlight.upvotes }}</span>
+              <span>💬 {{ boardHighlight.comments }}</span>
+            </div>
           </div>
-          <div class="text-base font-bold text-content mt-1.5 leading-snug line-clamp-2">
-            {{ boardHighlight.title }}
-          </div>
-          <div class="text-2xl font-bold text-[#0c5460] dark:text-content mt-1">฿299</div>
-        </div>
-        <NuxtLink to="/board" class="text-sm text-accent font-semibold flex items-center gap-0.5 mt-2 hover:underline">
-          อ่านรีวิว
-          <ChevronRight class="w-3.5 h-3.5" />
+          <span class="text-sm text-accent font-semibold flex items-center gap-0.5 mt-2">
+            อ่านรีวิว
+            <ChevronRight class="w-3.5 h-3.5" />
+          </span>
         </NuxtLink>
-      </div>
     </div>
   </section>
 </template>
@@ -80,15 +87,22 @@
 <script setup lang="ts">
 import { ArrowRight, ChevronRight, Star, Users, Zap } from 'lucide-vue-next'
 import type { Product } from '~/types'
-import { boardPreviewPosts } from '~/data/board-preview'
 import { HOME_HEADINGS } from '~/constants/seo'
+import type { BoardPost } from '~/types/board'
 
 defineProps<{
   topProduct?: Product | null
 }>()
 
+const { fetchPosts } = useBoard()
+
+const { data: boardHot } = await useAsyncData('hero-board-hot', () =>
+  fetchPosts({ sort: 'hot', limit: 2 }).then((r) => r.items[1] ?? r.items[0] ?? null).catch(() => null),
+)
+
+const boardHighlight = computed(() => boardHot.value as BoardPost | null)
+
 const activeSlide = ref(1)
-const boardHighlight = boardPreviewPosts[1]
 
 let slideTimer: ReturnType<typeof setInterval> | undefined
 

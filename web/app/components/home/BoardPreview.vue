@@ -12,10 +12,11 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <article
+      <NuxtLink
         v-for="post in posts"
         :key="post.id"
-        class="flex gap-2.5 p-2.5 rounded-md border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+        :to="`/board/posts/${post.id}`"
+        class="flex gap-2.5 p-2.5 rounded-md border border-gray-100 hover:bg-gray-50 transition-colors"
       >
         <div
           class="w-8 h-8 rounded-full text-white text-xs font-bold flex items-center justify-center shrink-0"
@@ -26,12 +27,6 @@
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-1.5 flex-wrap">
             <span class="text-xs font-semibold text-gray-800">{{ post.username }}</span>
-            <span
-              v-if="post.badge"
-              class="text-[9px] bg-[#FEF0ED] text-shopee px-1.5 py-px rounded font-bold"
-            >
-              {{ post.badge }}
-            </span>
           </div>
           <p class="text-xs text-gray-600 mt-0.5 truncate">{{ post.title }}</p>
           <div class="flex gap-2.5 mt-1 text-[11px] text-gray-400">
@@ -49,16 +44,16 @@
             </span>
           </div>
         </div>
-      </article>
+      </NuxtLink>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
 import { ArrowUp, ChevronRight, Clock, MessageCircle } from 'lucide-vue-next'
-import type { BoardPreviewPost } from '~/data/board-preview'
+import type { BoardPost } from '~/types/board'
 
 defineProps<{
-  posts: BoardPreviewPost[]
+  posts: BoardPost[]
 }>()
 </script>

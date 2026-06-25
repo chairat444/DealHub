@@ -1,4 +1,4 @@
-import type { BoardGroup } from '~/data/board-preview'
+import type { BoardGroup } from '~/types/board'
 
 /** สไตล์การ์ดกลุ่มบอร์ด — light ใช้ pastel, dark ใช้ surface เท่านั้น */
 export function useBoardGroupStyle() {

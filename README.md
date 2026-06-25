@@ -21,19 +21,23 @@
 
 ```bash
 # สร้าง database
-mysql -u root -p456456456 -e "CREATE DATABASE IF NOT EXISTS dealhub_th CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS dealhub_th CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
 # หรือใช้ Docker
 docker compose up -d mysql redis
+
+# ตั้งค่า env แล้วสร้างตาราง + demo data (สินค้า, บอร์ด, ผู้ใช้)
+cp api/.env.example api/.env
+npm run db:setup
 ```
+
+รายละเอียดเพิ่ม / ทางเลือก import SQL: [backups/README.md](backups/README.md)
 
 ### 2. Backend (API)
 
 ```bash
 cd api
 npm install
-npx prisma migrate dev --name init
-npm run db:seed
 npm run start:dev
 ```
 
@@ -80,7 +84,8 @@ affiliate-discovery-platform/
 │           ├── price-alerts/
 │           ├── affiliate/
 │           ├── admin/
-│           └── ai-reviews/
+│           ├── ai-reviews/
+│           └── board/
 ├── web/                    # Nuxt 4 Frontend
 │   ├── components/
 │   ├── composables/
@@ -101,6 +106,7 @@ affiliate-discovery-platform/
 - 📊 เปรียบเทียบสินค้า Side-by-side
 - 🤖 สรุปรีวิวด้วย AI
 - 🔗 Affiliate Click Tracking
+- 💬 บอร์ดชุมชน (โพสต์, คอมเมนต์, โหวต)
 - ⚙️ ระบบ Admin Dashboard (RBAC)
 
 ## Documentation

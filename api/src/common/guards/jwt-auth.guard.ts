@@ -1,7 +1,8 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+import { IS_OPTIONAL_AUTH_KEY } from '../decorators/optional-auth.decorator';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -14,7 +15,38 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic) return true;
+    const isOptionalAuth = this.reflector.getAllAndOverride<boolean>(IS_OPTIONAL_AUTH_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (isPublic && !isOptionalAuth) return true;
+
+    if (isOptionalAuth) {
+      const result = super.canActivate(context);
+      if (result instanceof Promise) {
+        return result.catch(() => true);
+      }
+      return result;
+    }
+
     return super.canActivate(context);
+  }
+
+  handleRequest<TUser>(err: Error, user: TUser, _info: unknown, context: ExecutionContext) {
+    const isOptionalAuth = this.reflector.getAllAndOverride<boolean>(IS_OPTIONAL_AUTH_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (isOptionalAuth) {
+      return user ?? null;
+    }
+
+    if (err || !user) {
+      throw err || new UnauthorizedException();
+    }
+
+    return user;
   }
 }
