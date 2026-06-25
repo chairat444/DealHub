@@ -2,6 +2,7 @@ import { PrismaClient, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { demoProducts } from './demo-products';
 import { boardDemoUsers, boardGroupDefs, boardPostSeeds } from './demo-board';
+import { generateUniqueUsername, resolveTier } from '../src/modules/members/constants/member.constants';
 
 const prisma = new PrismaClient();
 
@@ -13,11 +14,12 @@ async function main() {
 
   await prisma.user.upsert({
     where: { email: 'admin@dealhub.th' },
-    update: {},
+    update: { username: 'admin' },
     create: {
       email: 'admin@dealhub.th',
       passwordHash: adminPassword,
       name: 'ผู้ดูแลระบบ',
+      username: 'admin',
       role: UserRole.SUPER_ADMIN,
       emailVerified: true,
     },
@@ -123,18 +125,29 @@ async function main() {
   console.log('📋 Seeding board...');
 
   const demoPassword = await bcrypt.hash('user123456', 12);
-  const userByEmail: Record<string, { id: string }> = {
-    'user@dealhub.th': (await prisma.user.findUnique({ where: { email: 'user@dealhub.th' } }))!,
-  };
+  const somchai = await prisma.user.findUnique({ where: { email: 'user@dealhub.th' } });
+  const userByEmail: Record<string, { id: string }> = {};
+  if (somchai) {
+    userByEmail['user@dealhub.th'] = somchai;
+    if (!somchai.username) {
+      await prisma.user.update({
+        where: { id: somchai.id },
+        data: { username: await generateUniqueUsername(prisma, 'somchai') },
+      });
+    }
+  }
 
   for (const demoUser of boardDemoUsers) {
+    const emailLocal = demoUser.email.split('@')[0]!;
+    const username = await generateUniqueUsername(prisma, emailLocal);
     const user = await prisma.user.upsert({
       where: { email: demoUser.email },
-      update: { name: demoUser.name },
+      update: { name: demoUser.name, username },
       create: {
         email: demoUser.email,
         passwordHash: demoPassword,
         name: demoUser.name,
+        username,
         role: UserRole.USER,
         emailVerified: true,
       },
@@ -205,6 +218,58 @@ async function main() {
         });
       }
     }
+  }
+
+  const userProfileBoost: Record<string, { dealScore: number; nickname?: string; bio?: string; expertiseTags?: string[] }> = {
+    'dealhunter@dealhub.th': {
+      dealScore: 920,
+      nickname: 'Deal Hunter',
+      bio: 'ล่าดีลทุกแพลตฟอร์ม — แชร์ทุกวัน',
+      expertiseTags: ['deals', 'electronics'],
+    },
+    'arpakorn@dealhub.th': {
+      dealScore: 680,
+      nickname: 'อาภากร',
+      bio: 'สายหูฟังและอิเล็กทรอนิกส์',
+      expertiseTags: ['electronics', 'compare'],
+    },
+    'nattaya@dealhub.th': {
+      dealScore: 540,
+      nickname: 'ณัฐญา',
+      bio: 'สกินแคร์และความงาม',
+      expertiseTags: ['beauty', 'recommend'],
+    },
+    'user@dealhub.th': {
+      dealScore: 85,
+      nickname: 'สมชาย',
+      bio: 'มือใหม่หัดช้อปออนไลน์',
+      expertiseTags: ['newbie'],
+    },
+  };
+
+  for (const [email, profile] of Object.entries(userProfileBoost)) {
+    const u = await prisma.user.findUnique({ where: { email } });
+    if (!u) continue;
+    await prisma.user.update({
+      where: { id: u.id },
+      data: { ...profile, expertiseTags: profile.expertiseTags },
+    });
+  }
+
+  const usersWithoutUsername = await prisma.user.findMany({ where: { username: null } });
+  for (const u of usersWithoutUsername) {
+    const username = await generateUniqueUsername(prisma, u.email.split('@')[0]!);
+    await prisma.user.update({ where: { id: u.id }, data: { username } });
+  }
+
+  // อัปเดต tier หลังสร้างโพสต์
+  const seededUsers = await prisma.user.findMany({ where: { username: { not: null } } });
+  for (const u of seededUsers) {
+    const postCount = await prisma.boardPost.count({ where: { userId: u.id } });
+    await prisma.user.update({
+      where: { id: u.id },
+      data: { tier: resolveTier(u.dealScore, postCount) },
+    });
   }
 
   console.log('✅ Seed completed!');

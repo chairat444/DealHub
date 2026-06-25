@@ -43,6 +43,11 @@ export interface User {
   id: string
   email: string
   name: string
+  username?: string | null
+  avatar?: string | null
+  dealScore?: number
+  tier?: string
+  tierLabel?: string
   role: string
 }
 

@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -19,6 +21,7 @@ import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 import {
   CreateBoardCommentDto,
   CreateBoardPostDto,
+  UpdateBoardPostDto,
 } from './dto/board.dto';
 
 @ApiTags('Board')
@@ -83,6 +86,29 @@ export class BoardController {
     @Body() dto: CreateBoardPostDto,
   ) {
     return this.boardService.createPost(userId, dto);
+  }
+
+  @Patch('posts/:id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'แก้ไขโพสต์' })
+  updatePost(
+    @CurrentUser('id') userId: string,
+    @Param('id') postId: string,
+    @Body() dto: UpdateBoardPostDto,
+  ) {
+    return this.boardService.updatePost(userId, postId, dto);
+  }
+
+  @Delete('posts/:id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'ลบโพสต์' })
+  deletePost(
+    @CurrentUser('id') userId: string,
+    @Param('id') postId: string,
+    @CurrentUser('role') role: string,
+  ) {
+    const isAdmin = role === 'ADMIN' || role === 'SUPER_ADMIN';
+    return this.boardService.deletePost(userId, postId, isAdmin);
   }
 
   @Post('posts/:id/comments')

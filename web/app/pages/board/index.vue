@@ -20,11 +20,14 @@
           <span v-if="latestLabel">{{ latestLabel }}</span>
         </div>
 
-        <div class="mt-4 flex flex-wrap gap-2">
+        <div class="mt-4 flex flex-wrap gap-2 items-center">
           <button type="button" class="btn-primary text-sm px-4 py-2.5" @click="openCompose">
             <PenLine class="w-4 h-4 inline mr-1" />
             สร้างโพสต์ใหม่
           </button>
+          <NuxtLink to="/leaderboard" class="text-sm text-white/90 hover:text-white underline px-2">
+            🏆 Leaderboard
+          </NuxtLink>
           <div class="flex-1 min-w-[200px] bg-white/10 rounded-lg p-3 backdrop-blur-sm">
             <ShareButtons
               compact
@@ -132,6 +135,29 @@
 
         <form v-else class="space-y-3" @submit.prevent="submitPost">
           <div>
+            <label class="text-sm font-medium text-content">ประเภทโพสต์</label>
+            <select v-model="compose.postType" class="w-full mt-1 border border-line rounded-lg px-3 py-2 bg-surface text-content">
+              <option v-for="t in POST_TYPE_OPTIONS" :key="t.value" :value="t.value">
+                {{ t.icon }} {{ t.label }}
+              </option>
+            </select>
+          </div>
+          <div v-if="compose.postType === 'DEAL'" class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-sm font-medium text-content">แพลตฟอร์ม</label>
+              <select v-model="compose.platform" class="w-full mt-1 border border-line rounded-lg px-3 py-2 bg-surface text-content">
+                <option value="">เลือก</option>
+                <option value="SHOPEE">Shopee</option>
+                <option value="LAZADA">Lazada</option>
+                <option value="TIKTOK_SHOP">TikTok Shop</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-content">ราคา (บาท)</label>
+              <input v-model="compose.dealPrice" type="number" min="0" class="w-full mt-1 border border-line rounded-lg px-3 py-2 bg-surface text-content" />
+            </div>
+          </div>
+          <div>
             <label class="text-sm font-medium text-content">กลุ่ม</label>
             <select v-model="compose.groupSlug" class="w-full mt-1 border border-line rounded-lg px-3 py-2 bg-surface text-content">
               <option v-for="g in groups || []" :key="g.slug" :value="g.slug">
@@ -177,6 +203,7 @@
 import { MessageCircle, PenLine } from 'lucide-vue-next'
 import { HOME_HEADINGS } from '~/constants/seo'
 import { formatBoardLatestLabel } from '~/composables/useBoard'
+import { POST_TYPE_OPTIONS } from '~/constants/member'
 import type { BoardGroupSlug } from '~/types/board'
 
 useSiteSeo({
@@ -205,8 +232,11 @@ const composeError = ref('')
 
 const compose = reactive({
   groupSlug: initialGroup,
+  postType: 'DISCUSSION',
   title: '',
   body: '',
+  platform: '',
+  dealPrice: '' as string | number,
 })
 
 const { data: groups } = await useAsyncData('board-groups', () => fetchGroups().catch(() => []))
@@ -244,9 +274,12 @@ async function submitPost() {
   try {
     const post = await createPost({
       groupSlug: compose.groupSlug,
+      postType: compose.postType,
       title: compose.title.trim(),
       body: compose.body.trim() || undefined,
       excerpt: compose.body.trim().slice(0, 200) || undefined,
+      platform: compose.platform || undefined,
+      dealPrice: compose.dealPrice ? Number(compose.dealPrice) : undefined,
     }) as { id: string }
     showCompose.value = false
     compose.title = ''

@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <div class="flex-1 flex flex-col" :class="spotlight ? 'p-4 md:p-5' : compact ? 'p-3' : 'p-4'">
+    <div class="flex-1 flex flex-col" :class="spotlight ? 'p-3.5 bg-gradient-to-b from-[#FFF8F6] to-surface dark:from-surface dark:to-surface' : compact ? 'p-3' : 'p-4'">
       <div v-if="loading" class="text-center py-10 text-content-muted text-sm">กำลังโหลดชุมชน...</div>
 
       <template v-else>
@@ -51,30 +51,25 @@
         <NuxtLink
           v-if="spotlight && featuredPost"
           :to="`/board/posts/${featuredPost.id}`"
-          class="mb-4 p-4 rounded-xl border-2 border-shopee/25 bg-surface hover:border-shopee/50 hover:shadow-md transition-all group block"
+          class="mb-3.5 block rounded-xl border-2 border-shopee/25 bg-surface overflow-hidden hover:border-shopee/50 hover:shadow-md transition-all group"
         >
-          <div class="flex items-start gap-3">
+          <div class="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-shopee/15 to-amber-100/50 dark:from-shopee/20 dark:to-transparent">
+            <span class="text-xs font-bold text-shopee dark:text-[rgb(var(--accent-display))]">🔥 โพสต์ยอดนิยมวันนี้</span>
+            <span class="text-xs bg-shopee text-white px-1.5 py-0.5 rounded font-bold">HOT</span>
+          </div>
+          <div class="flex items-start gap-3 p-3">
             <div
-              class="w-12 h-12 rounded-full text-white text-base font-bold flex items-center justify-center shrink-0"
+              class="w-10 h-10 rounded-full text-white text-sm font-bold flex items-center justify-center shrink-0 ring-2 ring-white dark:ring-surface shadow-sm"
               :style="{ background: featuredPost.avatarColor }"
             >
               {{ featuredPost.initials }}
             </div>
             <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="text-xs font-bold text-accent uppercase tracking-wide">โพสต์ยอดนิยมวันนี้</span>
-                <span class="text-xs bg-shopee text-white px-2 py-0.5 rounded font-bold">HOT</span>
-                <span class="text-xs bg-surface-muted text-content-muted px-2 py-0.5 rounded">
-                  {{ featuredPost.groupIcon }} {{ featuredPost.groupName }}
-                </span>
-              </div>
-              <h3 class="text-base md:text-lg font-bold text-content mt-1.5 leading-snug group-hover:text-accent transition-colors line-clamp-2">
+              <span class="text-xs text-content-muted">{{ featuredPost.groupIcon }} {{ featuredPost.groupName }}</span>
+              <h3 class="text-sm font-bold text-content mt-0.5 leading-snug line-clamp-2 group-hover:text-accent transition-colors">
                 {{ featuredPost.title }}
               </h3>
-              <p v-if="featuredPost.excerpt" class="text-sm text-content-muted mt-1 line-clamp-1">
-                {{ featuredPost.excerpt }}
-              </p>
-              <div class="flex gap-3 mt-2 text-sm text-content-muted">
+              <div class="flex gap-3 mt-1.5 text-xs text-content-muted">
                 <span class="text-accent font-semibold">↑ {{ featuredPost.upvotes }}</span>
                 <span>💬 {{ featuredPost.comments }}</span>
                 <span>{{ featuredPost.timeAgo }}</span>
@@ -83,41 +78,87 @@
           </div>
         </NuxtLink>
 
-        <!-- Unanswered questions -->
-        <div v-if="spotlight && unansweredPosts.length" class="mb-4 p-3 rounded-xl bg-[#F3E5F5]/60 dark:bg-purple-950/20 border border-purple-200/50 dark:border-purple-900/40">
-          <h3 class="text-sm font-bold text-content flex items-center gap-1.5 mb-2">
-            <span>❓</span> คำถามรอคำตอบ — มาช่วยตอบกัน!
-          </h3>
-          <div class="space-y-2">
-            <NuxtLink
-              v-for="post in unansweredPosts"
-              :key="post.id"
-              :to="`/board/posts/${post.id}`"
-              class="block text-sm text-content hover:text-accent transition-colors line-clamp-1"
-            >
-              {{ post.title }}
-            </NuxtLink>
-          </div>
+        <!-- Quick play -->
+        <div v-if="spotlight" class="grid grid-cols-3 gap-2 mb-3.5">
+          <NuxtLink
+            to="/board?group=ask&compose=1"
+            class="flex flex-col items-center gap-1 p-2.5 rounded-xl border border-line bg-surface hover:border-shopee/40 hover:bg-shopee/5 hover:shadow-sm transition-all text-center"
+          >
+            <span class="text-xl">❓</span>
+            <span class="text-[11px] font-semibold text-content leading-tight">ถามก่อนซื้อ</span>
+          </NuxtLink>
+          <NuxtLink
+            to="/board?group=deals&compose=1"
+            class="flex flex-col items-center gap-1 p-2.5 rounded-xl border border-line bg-surface hover:border-shopee/40 hover:bg-shopee/5 hover:shadow-sm transition-all text-center"
+          >
+            <span class="text-xl">🏷️</span>
+            <span class="text-[11px] font-semibold text-content leading-tight">แชร์ดีล</span>
+          </NuxtLink>
+          <NuxtLink
+            to="/board?group=review&compose=1"
+            class="flex flex-col items-center gap-1 p-2.5 rounded-xl border border-line bg-surface hover:border-shopee/40 hover:bg-shopee/5 hover:shadow-sm transition-all text-center"
+          >
+            <span class="text-xl">⭐</span>
+            <span class="text-[11px] font-semibold text-content leading-tight">รีวิวของดี</span>
+          </NuxtLink>
         </div>
 
         <!-- Hot topics -->
-        <div v-if="spotlight" class="mb-4">
-          <h3 class="text-sm font-bold text-content-muted mb-2">หัวข้อยอดนิยม</h3>
-          <div class="flex flex-wrap gap-2">
+        <div v-if="spotlight" class="mb-3.5">
+          <h3 class="text-xs font-bold text-content-muted mb-2 flex items-center gap-1">
+            <Flame class="w-3.5 h-3.5 text-shopee" />
+            หัวข้อมาแรง
+          </h3>
+          <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-0.5 px-0.5">
             <button
               v-for="group in hotGroups"
               :key="group.slug"
               type="button"
-              class="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full border transition-all"
-              :class="activeGroup === group.slug
-                ? 'border-shopee bg-shopee/10 text-accent font-semibold'
-                : 'border-line bg-surface text-content-muted hover:border-shopee/30 hover:text-content'"
+              class="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border-2 whitespace-nowrap shrink-0 transition-all hover:scale-[1.02] board-group-card"
+              :class="[
+                activeGroup === group.slug ? 'is-active font-bold shadow-sm' : 'opacity-90 hover:opacity-100 border-transparent',
+              ]"
+              :style="cardStyle(group, activeGroup === group.slug)"
               @click="activeGroup = group.slug"
             >
-              <span>{{ group.icon }}</span>
+              <span class="text-base">{{ group.icon }}</span>
               {{ group.name }}
-              <span class="text-xs opacity-70">{{ group.activeToday }}+</span>
+              <span class="opacity-70">{{ group.activeToday }}+</span>
             </button>
+          </div>
+        </div>
+
+        <!-- Unanswered questions -->
+        <div v-if="spotlight && unansweredPosts.length" class="mb-3.5 rounded-xl border border-amber-200/80 dark:border-amber-900/40 bg-gradient-to-r from-amber-50 to-orange-50/50 dark:from-amber-950/20 dark:to-surface p-3">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <h3 class="text-xs font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+              <HelpCircle class="w-4 h-4" />
+              ใครช่วยตอบหน่อย?
+            </h3>
+            <NuxtLink to="/board?group=ask" class="text-xs font-semibold text-shopee hover:underline shrink-0">
+              ดูทั้งหมด →
+            </NuxtLink>
+          </div>
+          <div class="space-y-1.5">
+            <NuxtLink
+              v-for="post in unansweredPosts"
+              :key="post.id"
+              :to="`/board/posts/${post.id}`"
+              class="flex items-center gap-2.5 p-2 rounded-lg bg-surface/80 dark:bg-surface border border-amber-100 dark:border-line hover:border-shopee/40 hover:shadow-sm transition-all group"
+            >
+              <div
+                class="w-8 h-8 rounded-full text-white text-[10px] font-bold flex items-center justify-center shrink-0"
+                :style="{ background: post.avatarColor }"
+              >
+                {{ post.initials }}
+              </div>
+              <p class="flex-1 min-w-0 text-sm font-medium text-content line-clamp-1 group-hover:text-accent transition-colors">
+                {{ post.title }}
+              </p>
+              <span class="text-[10px] font-bold text-shopee shrink-0 px-2 py-1 rounded-full bg-shopee/10 group-hover:bg-shopee/20 transition-colors">
+                ตอบเลย
+              </span>
+            </NuxtLink>
           </div>
         </div>
 
@@ -159,14 +200,15 @@
 
         <!-- Posts -->
         <div v-if="spotlight">
-          <h3 class="text-sm font-bold text-content-muted mb-2">
-            {{ activeGroupData ? `โพสต์ใน${activeGroupData.name}` : 'โพสต์ล่าสุด' }}
+          <h3 class="text-xs font-bold text-content-muted mb-2 flex items-center gap-1">
+            <MessageSquare class="w-3.5 h-3.5" />
+            {{ activeGroupData ? `กำลังคุยใน${activeGroupData.name}` : 'โพสต์ที่น่าสนใจ' }}
           </h3>
         </div>
 
         <div
           :class="spotlight
-            ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3'
+            ? 'grid grid-cols-1 sm:grid-cols-2 gap-2'
             : compact
               ? 'space-y-2 flex-1'
               : 'grid grid-cols-1 md:grid-cols-2 gap-2.5'"
@@ -175,56 +217,54 @@
             v-for="post in visiblePosts"
             :key="post.id"
             :to="`/board/posts/${post.id}`"
-            class="flex gap-2.5 bg-surface rounded-xl border border-line hover:border-shopee/40 hover:shadow-sm transition-all group"
-            :class="spotlight ? 'p-3.5 flex-col sm:flex-row' : 'p-2.5'"
+            class="group transition-all"
+            :class="spotlight
+              ? 'flex gap-2.5 p-2.5 rounded-xl bg-surface border border-line hover:border-shopee/40 hover:shadow-md hover:-translate-y-0.5'
+              : 'flex gap-2.5 bg-surface rounded-xl border border-line hover:border-shopee/40 hover:shadow-sm p-2.5'"
           >
-            <div class="flex gap-2.5" :class="spotlight ? 'w-full' : ''">
-              <div
-                class="rounded-full text-white text-sm font-bold flex items-center justify-center shrink-0"
-                :class="spotlight ? 'w-10 h-10' : 'w-9 h-9'"
-                :style="{ background: post.avatarColor }"
-              >
-                {{ post.initials }}
+            <div
+              class="rounded-full text-white text-xs font-bold flex items-center justify-center shrink-0"
+              :class="spotlight ? 'w-9 h-9' : 'w-9 h-9'"
+              :style="{ background: post.avatarColor }"
+            >
+              {{ post.initials }}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-1 flex-wrap">
+                <span class="text-xs font-semibold text-content">{{ post.username }}</span>
+                <span v-if="post.isHot" class="text-[10px] bg-shopee text-white px-1 py-px rounded font-bold">HOT</span>
+                <span v-if="spotlight" class="text-[10px] text-content-muted">{{ post.groupIcon }}</span>
               </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-1 flex-wrap">
-                  <span class="text-sm font-semibold text-content">{{ post.username }}</span>
-                  <span v-if="post.isHot" class="text-xs bg-shopee text-white px-1.5 py-0.5 rounded font-bold">HOT</span>
-                </div>
-                <p
-                  class="font-medium text-content mt-1 group-hover:text-accent transition-colors"
-                  :class="spotlight ? 'text-sm line-clamp-3 min-h-[3.75rem]' : 'text-sm line-clamp-2'"
-                >
-                  {{ post.title }}
-                </p>
-                <div class="flex gap-2 mt-1.5 text-sm text-content-muted">
-                  <span class="text-accent font-semibold">↑ {{ post.upvotes }}</span>
-                  <span>💬 {{ post.comments }}</span>
-                  <span>{{ post.timeAgo }}</span>
-                </div>
+              <p
+                class="text-sm font-medium text-content mt-0.5 group-hover:text-accent transition-colors"
+                :class="spotlight ? 'line-clamp-2 leading-snug' : 'line-clamp-2 mt-1'"
+              >
+                {{ post.title }}
+              </p>
+              <div class="flex gap-2 mt-1 text-xs text-content-muted">
+                <span class="text-accent font-semibold">↑ {{ post.upvotes }}</span>
+                <span>💬 {{ post.comments }}</span>
+                <span>{{ post.timeAgo }}</span>
               </div>
             </div>
           </NuxtLink>
         </div>
 
-        <div
-          class="mt-4 flex flex-col sm:flex-row gap-2"
-          :class="spotlight ? '' : 'mt-3'"
-        >
+        <div class="mt-3.5 flex flex-col sm:flex-row gap-2" :class="spotlight ? '' : 'mt-3'">
           <NuxtLink
             :to="`/board${activeGroup !== 'all' ? `?group=${activeGroup}` : ''}`"
-            class="flex-1 flex items-center justify-center gap-1 py-3 rounded-lg border-2 border-dashed border-shopee/30 text-accent text-sm font-semibold hover:bg-shopee/10 dark:hover:bg-shopee/20 transition-colors"
+            class="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl btn-primary text-sm font-semibold shadow-sm hover:opacity-95 transition-opacity"
           >
-            อ่านโพสต์{{ activeGroupData?.name ? `ใน${activeGroupData.name}` : 'ทั้งหมด' }}
+            เข้าไปอ่านต่อใน{{ activeGroupData?.name || 'บอร์ด' }}
             <ChevronRight class="w-4 h-4" />
           </NuxtLink>
           <NuxtLink
             v-if="spotlight"
             to="/board?compose=1"
-            class="flex-1 flex items-center justify-center gap-1 py-3 rounded-lg btn-primary text-sm"
+            class="sm:w-auto flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl border-2 border-dashed border-shopee/35 text-accent text-sm font-semibold hover:bg-shopee/10 transition-colors"
           >
             <PenLine class="w-4 h-4" />
-            สร้างโพสต์ใหม่
+            สร้างโพสต์ของคุณ
           </NuxtLink>
         </div>
       </template>
@@ -233,7 +273,7 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronRight, PenLine, Users } from 'lucide-vue-next'
+import { ChevronRight, Flame, HelpCircle, MessageSquare, PenLine, Users } from 'lucide-vue-next'
 import type { BoardGroup, BoardPost, BoardGroupSlug } from '~/types/board'
 
 const props = withDefaults(defineProps<{
@@ -261,7 +301,7 @@ const activeGroupData = computed(() =>
 )
 
 const postLimit = computed(() => {
-  if (props.spotlight) return 6
+  if (props.spotlight) return 4
   if (props.compact) return 3
   return 4
 })
@@ -288,7 +328,7 @@ const totalActiveToday = computed(() =>
 )
 
 const hotGroups = computed(() =>
-  [...props.groups].sort((a, b) => b.activeToday - a.activeToday).slice(0, 6),
+  [...props.groups].sort((a, b) => b.activeToday - a.activeToday).slice(0, 5),
 )
 </script>
 

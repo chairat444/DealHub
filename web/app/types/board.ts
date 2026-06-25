@@ -31,6 +31,9 @@ export interface BoardPost {
   createdAt: string
   timeAgo: string
   hasUpvoted?: boolean
+  userId?: string
+  authorUsername?: string
+  postType?: string
   product?: {
     id: string
     slug: string

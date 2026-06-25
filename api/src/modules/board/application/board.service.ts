@@ -1,9 +1,13 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../infrastructure/database/prisma.service';
+import { ReputationService } from '../../members/application/reputation.service';
+import { TIER_LABELS } from '../../members/constants/member.constants';
+import { BoardPostType } from '@prisma/client';
 
 const AVATAR_COLORS = [
   '#EE4D2D',
@@ -20,7 +24,10 @@ const AVATAR_COLORS = [
 
 @Injectable()
 export class BoardService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private reputation: ReputationService,
+  ) {}
 
   async getGroups() {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -145,7 +152,19 @@ export class BoardService {
         ...this.postInclude(),
         comments: {
           orderBy: { createdAt: 'asc' },
-          include: { user: { select: { id: true, name: true } } },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                username: true,
+                nickname: true,
+                avatar: true,
+                dealScore: true,
+                tier: true,
+              },
+            },
+          },
         },
       },
     });
@@ -159,7 +178,12 @@ export class BoardService {
 
     return {
       ...this.mapPost(post, hasUpvoted),
+      userId: post.userId,
       body: post.body,
+      postType: post.postType,
+      dealPrice: post.dealPrice ? Number(post.dealPrice) : null,
+      platform: post.platform,
+      affiliateUrl: post.affiliateUrl,
       comments: post.comments.map((c) => ({
         id: c.id,
         body: c.body,
@@ -174,10 +198,14 @@ export class BoardService {
     userId: string,
     data: {
       groupSlug: string;
+      postType?: BoardPostType;
       title: string;
       excerpt?: string;
       body?: string;
       productId?: string;
+      dealPrice?: number;
+      platform?: string;
+      affiliateUrl?: string;
     },
   ) {
     const group = await this.prisma.boardGroup.findUnique({
@@ -196,15 +224,58 @@ export class BoardService {
       data: {
         groupId: group.id,
         userId,
+        postType: data.postType ?? 'DISCUSSION',
         title: data.title.trim(),
         excerpt: data.excerpt?.trim(),
         body: data.body?.trim(),
         productId: data.productId,
+        dealPrice: data.dealPrice,
+        platform: data.platform,
+        affiliateUrl: data.affiliateUrl?.trim(),
       },
       include: this.postInclude(),
     });
 
+    await this.reputation.onPostCreated(
+      userId,
+      (data.body?.trim().length ?? 0) >= 100,
+    );
+
     return this.mapPost(post, false);
+  }
+
+  async updatePost(
+    userId: string,
+    postId: string,
+    data: { title?: string; excerpt?: string; body?: string },
+  ) {
+    const post = await this.prisma.boardPost.findUnique({ where: { id: postId } });
+    if (!post) throw new NotFoundException('ไม่พบโพสต์');
+    if (post.userId !== userId) throw new ForbiddenException('แก้ไขได้เฉพาะโพสต์ของตัวเอง');
+
+    const updated = await this.prisma.boardPost.update({
+      where: { id: postId },
+      data: {
+        title: data.title?.trim(),
+        excerpt: data.excerpt?.trim(),
+        body: data.body?.trim(),
+      },
+      include: this.postInclude(),
+    });
+
+    return this.mapPost(updated, false);
+  }
+
+  async deletePost(userId: string, postId: string, isAdmin = false) {
+    const post = await this.prisma.boardPost.findUnique({ where: { id: postId } });
+    if (!post) throw new NotFoundException('ไม่พบโพสต์');
+    if (post.userId !== userId && !isAdmin) {
+      throw new ForbiddenException('ลบได้เฉพาะโพสต์ของตัวเอง');
+    }
+
+    await this.prisma.boardPost.delete({ where: { id: postId } });
+    await this.reputation.recalculateTier(post.userId);
+    return { success: true };
   }
 
   async addComment(userId: string, postId: string, body: string) {
@@ -217,13 +288,27 @@ export class BoardService {
     const [comment] = await this.prisma.$transaction([
       this.prisma.boardComment.create({
         data: { postId, userId, body: trimmed },
-        include: { user: { select: { id: true, name: true } } },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              nickname: true,
+              avatar: true,
+              dealScore: true,
+              tier: true,
+            },
+          },
+        },
       }),
       this.prisma.boardPost.update({
         where: { id: postId },
         data: { commentCount: { increment: 1 } },
       }),
     ]);
+
+    await this.reputation.onCommentCreated(userId);
 
     return {
       id: comment.id,
@@ -253,6 +338,7 @@ export class BoardService {
           },
         }),
       ]);
+      await this.reputation.onUpvoteRemoved(post.userId, userId);
       return { upvoted: false, upvoteCount: post.upvoteCount - 1 };
     }
 
@@ -264,12 +350,23 @@ export class BoardService {
         data: { upvoteCount: { increment: 1 }, isHot: newCount >= 150 },
       }),
     ]);
+    await this.reputation.onPostUpvoted(post.userId, userId);
     return { upvoted: true, upvoteCount: newCount };
   }
 
   private postInclude() {
     return {
-      user: { select: { id: true, name: true } },
+      user: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          nickname: true,
+          avatar: true,
+          dealScore: true,
+          tier: true,
+        },
+      },
       group: {
         select: { id: true, slug: true, name: true, icon: true, color: true, bg: true },
       },
@@ -289,13 +386,23 @@ export class BoardService {
   private mapPost(
     post: {
       id: string;
+      userId: string;
       title: string;
       excerpt: string | null;
+      postType: BoardPostType;
       upvoteCount: number;
       commentCount: number;
       isHot: boolean;
       createdAt: Date;
-      user: { id: string; name: string };
+      user: {
+        id: string;
+        name: string;
+        username: string | null;
+        nickname: string | null;
+        avatar: string | null;
+        dealScore: number;
+        tier: import('@prisma/client').MemberTier;
+      };
       group: {
         id: string;
         slug: string;
@@ -316,6 +423,9 @@ export class BoardService {
     const user = this.mapUser(post.user);
     return {
       id: post.id,
+      userId: post.userId,
+      authorUsername: user.username,
+      postType: post.postType,
       groupId: post.group.slug,
       groupSlug: post.group.slug,
       groupName: post.group.name,
@@ -344,12 +454,27 @@ export class BoardService {
     };
   }
 
-  private mapUser(user: { id: string; name: string }) {
+  private mapUser(user: {
+    id: string;
+    name: string;
+    username: string | null;
+    nickname?: string | null;
+    avatar?: string | null;
+    dealScore?: number;
+    tier?: import('@prisma/client').MemberTier;
+  }) {
+    const username = user.username ?? user.name.replace(/\s+/g, '_').toLowerCase();
     return {
       id: user.id,
       name: user.name,
-      username: `@${user.name.replace(/\s+/g, '_').toLowerCase()}`,
-      initials: this.getInitials(user.name),
+      username,
+      displayName: user.nickname || user.name,
+      nickname: user.nickname,
+      avatar: user.avatar,
+      dealScore: user.dealScore ?? 0,
+      tier: user.tier,
+      tierLabel: user.tier ? TIER_LABELS[user.tier].th : undefined,
+      initials: this.getInitials(user.nickname || user.name),
       avatarColor: this.getAvatarColor(user.id),
     };
   }

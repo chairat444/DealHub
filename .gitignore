@@ -24,3 +24,6 @@ coverage/
 
 # Prisma
 api/generated/
+
+# User uploads
+api/uploads/

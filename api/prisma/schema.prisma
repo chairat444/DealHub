@@ -21,12 +21,25 @@ enum UserStatus {
   BANNED
 }
 
+enum MemberTier {
+  DEAL_HUNTER
+  DEAL_SCOUT
+  DEAL_MASTER
+  DEAL_LEGEND
+}
+
 model User {
   id            String       @id @default(cuid())
   email         String       @unique
   passwordHash  String       @map("password_hash")
   name          String
+  username      String?      @unique
+  nickname      String?
+  bio           String?      @db.Text
   avatar        String?
+  dealScore     Int          @default(0) @map("deal_score")
+  tier          MemberTier   @default(DEAL_HUNTER)
+  expertiseTags Json?        @map("expertise_tags")
   role          UserRole     @default(USER)
   status        UserStatus   @default(ACTIVE)
   emailVerified Boolean      @default(false) @map("email_verified")
@@ -42,6 +55,8 @@ model User {
   boardComments BoardComment[]
   boardPostUpvotes BoardPostUpvote[]
 
+  @@index([dealScore])
+  @@index([tier])
   @@map("users")
 }
 
@@ -294,6 +309,14 @@ model TrendingKeyword {
 
 // ==================== COMMUNITY BOARD ====================
 
+enum BoardPostType {
+  DISCUSSION
+  DEAL
+  REVIEW
+  POLL
+  FLASH_ALERT
+}
+
 model BoardGroup {
   id          String      @id @default(cuid())
   slug        String      @unique
@@ -311,18 +334,22 @@ model BoardGroup {
 }
 
 model BoardPost {
-  id           String   @id @default(cuid())
-  groupId      String   @map("group_id")
-  userId       String   @map("user_id")
-  productId    String?  @map("product_id")
+  id           String        @id @default(cuid())
+  groupId      String        @map("group_id")
+  userId       String        @map("user_id")
+  productId    String?       @map("product_id")
+  postType     BoardPostType @default(DISCUSSION) @map("post_type")
   title        String
-  excerpt      String?  @db.Text
-  body         String?  @db.Text
-  upvoteCount  Int      @default(0) @map("upvote_count")
-  commentCount Int      @default(0) @map("comment_count")
-  isHot        Boolean  @default(false) @map("is_hot")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  excerpt      String?       @db.Text
+  body         String?       @db.Text
+  dealPrice    Decimal?      @map("deal_price") @db.Decimal(12, 2)
+  affiliateUrl String?       @map("affiliate_url") @db.Text
+  platform     String?
+  upvoteCount  Int           @default(0) @map("upvote_count")
+  commentCount Int           @default(0) @map("comment_count")
+  isHot        Boolean       @default(false) @map("is_hot")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
 
   group    BoardGroup        @relation(fields: [groupId], references: [id], onDelete: Cascade)
   user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)

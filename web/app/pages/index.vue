@@ -17,10 +17,12 @@
         :best-sellers="bestSellers"
       />
 
-      <div class="deals-board-divider my-5 flex items-center gap-3" aria-hidden="true">
-        <div class="flex-1 h-px bg-line" />
-        <span class="text-sm font-semibold text-content-muted px-2">ชุมชนผู้ช้อป</span>
-        <div class="flex-1 h-px bg-line" />
+      <div class="deals-board-divider my-4 flex items-center gap-3" aria-hidden="true">
+        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-shopee/30 to-transparent" />
+        <span class="text-xs font-bold text-shopee dark:text-[rgb(var(--accent-display))] px-2 flex items-center gap-1">
+          💬 ชุมชนผู้ช้อป
+        </span>
+        <div class="flex-1 h-px bg-gradient-to-l from-transparent via-shopee/30 to-transparent" />
       </div>
 
       <HomeBoardSpotlight />

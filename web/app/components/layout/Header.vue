@@ -39,14 +39,7 @@
           </NuxtLink>
 
           <template v-if="authStore.isLoggedIn">
-            <NuxtLink v-if="authStore.isAdmin" to="/admin" class="nav-act hidden sm:flex">
-              <Shield class="w-5 h-5" />
-              <span>แอดมิน</span>
-            </NuxtLink>
-            <button type="button" class="nav-act hidden sm:flex" @click="authStore.logout(); navigateTo('/')">
-              <User class="w-5 h-5" />
-              <span class="max-w-[80px] truncate">{{ authStore.user?.name }}</span>
-            </button>
+            <LayoutHeaderUserMenu />
           </template>
           <NuxtLink v-else to="/auth/login" class="nav-act hidden sm:flex">
             <User class="w-5 h-5" />
@@ -80,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowRight, Bell, Flame, Heart, LayoutGrid, Search, Shield, User } from 'lucide-vue-next'
+import { ArrowRight, Bell, Flame, Heart, LayoutGrid, Search, User } from 'lucide-vue-next'
 import type { Category } from '~/types'
 
 const authStore = useAuthStore()

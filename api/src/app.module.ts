@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
+import { MembersModule } from './modules/members/members.module';
 import { PriceAlertsModule } from './modules/price-alerts/price-alerts.module';
 import { AffiliateModule } from './modules/affiliate/affiliate.module';
 import { AdminModule } from './modules/admin/admin.module';
@@ -28,6 +29,7 @@ import { RolesGuard } from './common/guards/roles.guard';
     ProductsModule,
     CategoriesModule,
     WishlistModule,
+    MembersModule,
     PriceAlertsModule,
     AffiliateModule,
     AdminModule,

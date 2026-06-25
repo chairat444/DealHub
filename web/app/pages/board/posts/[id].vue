@@ -21,7 +21,14 @@
               {{ post.initials }}
             </div>
             <div>
-              <div class="font-semibold text-content">{{ post.username }}</div>
+              <NuxtLink
+                v-if="post.authorUsername"
+                :to="`/profile/${post.authorUsername}`"
+                class="font-semibold text-content hover:text-accent"
+              >
+                @{{ post.authorUsername }}
+              </NuxtLink>
+              <div v-else class="font-semibold text-content">{{ post.username }}</div>
               <div class="flex items-center gap-2 mt-1 flex-wrap text-sm">
                 <span
                   class="text-xs px-2 py-0.5 rounded font-semibold"
@@ -76,8 +83,16 @@
               :title="post.title"
               :path="`/board/posts/${post.id}`"
               label="แชร์โพสต์นี้"
-              class="ml-auto"
             />
+            <button
+              v-if="isOwner"
+              type="button"
+              class="text-sm text-red-600 border border-red-200 px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30"
+              :disabled="deleting"
+              @click="handleDelete"
+            >
+              ลบโพสต์
+            </button>
           </div>
         </article>
 
@@ -136,12 +151,13 @@ import type { BoardPostDetail } from '~/types/board'
 
 const route = useRoute()
 const authStore = useAuthStore()
-const { fetchPost, addComment, toggleUpvote } = useBoard()
+const { fetchPost, addComment, toggleUpvote, deletePost } = useBoard()
 
 const postId = route.params.id as string
 const commentBody = ref('')
 const commenting = ref(false)
 const upvoting = ref(false)
+const deleting = ref(false)
 const localUpvotes = ref(0)
 const localHasUpvoted = ref(false)
 
@@ -163,6 +179,22 @@ useSiteSeo(computed(() => ({
   path: `/board/posts/${postId}`,
   noindex: true,
 })))
+
+const isOwner = computed(() =>
+  authStore.isLoggedIn && post.value?.userId === authStore.user?.id,
+)
+
+async function handleDelete() {
+  if (!confirm('ลบโพสต์นี้?')) return
+  deleting.value = true
+  try {
+    await deletePost(postId)
+    await navigateTo('/board')
+  }
+  finally {
+    deleting.value = false
+  }
+}
 
 async function handleUpvote() {
   if (!authStore.isLoggedIn) {

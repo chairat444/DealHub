@@ -32,11 +32,21 @@ export function useBoard() {
 
   const createPost = (body: {
     groupSlug: string
+    postType?: string
     title: string
     excerpt?: string
     body?: string
     productId?: string
+    dealPrice?: number
+    platform?: string
+    affiliateUrl?: string
   }) => apiFetch('/board/posts', { method: 'POST', body })
+
+  const updatePost = (postId: string, body: { title?: string; excerpt?: string; body?: string }) =>
+    apiFetch(`/board/posts/${postId}`, { method: 'PATCH', body })
+
+  const deletePost = (postId: string) =>
+    apiFetch(`/board/posts/${postId}`, { method: 'DELETE' })
 
   const addComment = (postId: string, body: string) =>
     apiFetch(`/board/posts/${postId}/comments`, { method: 'POST', body: { body } })
@@ -52,6 +62,8 @@ export function useBoard() {
     fetchPosts,
     fetchPost,
     createPost,
+    updatePost,
+    deletePost,
     addComment,
     toggleUpvote,
   }

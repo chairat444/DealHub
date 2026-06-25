@@ -1,10 +1,19 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { existsSync, mkdirSync } from 'fs';
+import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  const uploadsPath = join(process.cwd(), 'uploads');
+  if (!existsSync(uploadsPath)) {
+    mkdirSync(uploadsPath, { recursive: true });
+  }
+  app.useStaticAssets(uploadsPath, { prefix: '/uploads/' });
 
   app.setGlobalPrefix('api/v1');
   app.enableCors({
@@ -33,6 +42,7 @@ async function bootstrap() {
     .addTag('Affiliate', 'Affiliate Tracking')
     .addTag('Admin', 'ผู้ดูแลระบบ')
     .addTag('AI Reviews', 'สรุปรีวิว AI')
+    .addTag('Members', 'สมาชิกและ Deal Score')
     .addTag('Board', 'บอร์ดชุมชน')
     .build();
 
