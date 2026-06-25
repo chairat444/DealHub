@@ -3,7 +3,7 @@
     <div class="flex items-end justify-between mb-3 px-0.5">
       <div>
         <div class="flex items-center gap-2">
-          <span class="bg-[#FFD600] text-[#c13515] text-xs font-bold px-2.5 py-1 rounded uppercase tracking-wide">
+          <span class="bg-shopee/10 text-shopee dark:bg-shopee/20 dark:text-shopee/90 text-xs font-bold px-2.5 py-1 rounded uppercase tracking-wide">
             Hot Pick
           </span>
           <h2 class="text-xl font-bold text-content">สินค้าแนะนำวันนี้</h2>
@@ -41,7 +41,7 @@
           />
           <div
             v-if="getDiscount(product)"
-            class="absolute bottom-2 right-2 bg-[#d4006a] text-white text-sm font-bold px-2.5 py-1 rounded-lg shadow z-10"
+            class="absolute bottom-2 right-2 bg-[#d4006a] dark:bg-[#d4006a]/75 text-white text-sm font-bold px-2.5 py-1 rounded-lg shadow z-10"
           >
             ลด {{ getDiscount(product) }}%
           </div>

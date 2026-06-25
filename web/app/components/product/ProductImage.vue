@@ -1,10 +1,10 @@
 <template>
-  <div class="relative overflow-hidden bg-surface-muted" :class="containerClass">
+  <div class="relative overflow-hidden product-image-frame" :class="containerClass">
     <img
       v-show="!useFallback"
       :src="currentSrc"
       :alt="alt"
-      :class="imgClass"
+      :class="[imgClass, 'product-photo']"
       loading="lazy"
       referrerpolicy="no-referrer"
       @error="handleError"

@@ -19,8 +19,11 @@
           :key="group.id"
           type="button"
           class="text-left p-3 rounded-xl border-2 transition-all"
-          :class="activeGroup === group.id ? 'border-current shadow-md' : 'border-line bg-surface hover:shadow-sm'"
-          :style="{ background: activeGroup === group.id ? group.bg : undefined }"
+          :class="[
+            ...cardClass(activeGroup === group.id),
+            activeGroup === group.id ? 'border-current shadow-md' : 'border-line bg-surface hover:shadow-sm',
+          ]"
+          :style="cardStyle(group, activeGroup === group.id)"
           @click="activeGroup = group.id"
         >
           <span class="text-2xl">{{ group.icon }}</span>
@@ -89,6 +92,7 @@ useSiteSeo({
 
 const route = useRoute()
 const groups = boardGroups
+const { cardStyle, cardClass } = useBoardGroupStyle()
 
 const initialGroup = (route.query.group as BoardGroupId) || 'recommend'
 const activeGroup = ref<BoardGroupId>(initialGroup)

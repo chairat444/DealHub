@@ -1,6 +1,6 @@
 <template>
   <section
-    class="rounded-xl overflow-hidden border border-[#F5C4B8] dark:border-line bg-gradient-to-br from-[#FFF6F4] via-surface to-[#FFF9E6] dark:from-surface-muted dark:via-surface dark:to-surface-muted"
+    class="rounded-xl overflow-hidden border border-[#F5C4B8] dark:border-line bg-gradient-to-br from-[#FFF6F4] via-surface to-[#FFF9E6] dark:bg-surface dark:from-surface dark:via-surface dark:to-surface"
     :class="compact ? 'h-full flex flex-col' : 'mb-2.5'"
   >
     <!-- Header -->
@@ -18,7 +18,7 @@
           </div>
           <NuxtLink
             to="/board"
-            class="bg-[#FFD600] hover:bg-[#f5cc00] text-[#c13515] text-sm font-bold px-3 py-2 rounded-lg shrink-0 transition-colors"
+            class="badge-hot text-sm font-bold px-3 py-2 rounded-lg shrink-0 transition-colors hover:opacity-90"
           >
             + โพสต์
           </NuxtLink>
@@ -55,20 +55,18 @@
             class="text-left rounded-xl border-2 transition-all duration-150"
             :class="[
               compact ? 'shrink-0 w-[145px] p-3' : 'p-3.5',
-              activeGroup === group.id
-                ? 'border-current shadow-md'
-                : 'border-transparent hover:border-line hover:shadow-sm',
+              ...cardClass(activeGroup === group.id),
+              activeGroup !== group.id
+                ? 'border-transparent hover:border-line hover:shadow-sm'
+                : 'border-current shadow-md',
             ]"
-            :style="{
-              background: group.bg,
-              color: activeGroup === group.id ? group.color : undefined,
-            }"
+            :style="cardStyle(group, activeGroup === group.id)"
             @click="activeGroup = group.id"
           >
             <span :class="compact ? 'text-xl' : 'text-2xl'">{{ group.icon }}</span>
             <div class="text-sm font-bold text-content mt-1 leading-tight">{{ group.name }}</div>
             <div v-if="!compact" class="text-xs text-content-muted mt-0.5 line-clamp-1">{{ group.description }}</div>
-            <div class="text-xs font-semibold mt-1.5" :style="{ color: group.color }">
+            <div class="text-xs font-semibold mt-1.5" :class="activeGroup === group.id ? 'text-shopee' : 'text-content-muted'">
               {{ group.activeToday }}+ วันนี้
             </div>
           </button>
@@ -131,6 +129,8 @@ const props = withDefaults(defineProps<{
 }>(), {
   compact: false,
 })
+
+const { cardStyle, cardClass } = useBoardGroupStyle()
 
 const groups = boardGroups
 const activeGroup = ref<BoardGroupId | 'all'>('recommend')

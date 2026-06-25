@@ -1,10 +1,10 @@
 <template>
   <section class="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-3 mb-2.5">
-    <!-- Hero main — สูงขึ้น -->
-    <div class="bg-shopee rounded-xl p-8 lg:p-10 min-h-[260px] lg:min-h-[300px] flex flex-col justify-end relative overflow-hidden">
+    <!-- Hero main -->
+    <div class="bg-shopee rounded-xl p-8 lg:p-10 min-h-[260px] lg:min-h-[300px] flex flex-col justify-end relative overflow-hidden dark:brightness-[0.92]">
       <div class="absolute right-0 top-0 bottom-0 w-[55%] bg-[#c13515] [clip-path:polygon(20%_0,100%_0,100%_100%,0%_100%)]" />
 
-      <span class="relative z-10 inline-flex items-center gap-1.5 bg-[#FFD600] text-[#c13515] text-sm font-bold px-3 py-1 rounded-md w-fit mb-3">
+      <span class="relative z-10 inline-flex items-center gap-1.5 badge-hot text-sm px-3 py-1 rounded-md w-fit mb-3">
         <Zap class="w-3.5 h-3.5" />
         Flash Deal วันนี้เท่านั้น
       </span>
@@ -16,7 +16,7 @@
       </p>
       <NuxtLink
         to="/search"
-        class="relative z-10 mt-5 inline-flex items-center gap-2 bg-[#FFD600] text-[#c13515] text-base font-bold px-6 py-3 rounded-lg w-fit hover:bg-[#f5cc00] transition-colors shadow-md"
+        class="relative z-10 mt-5 inline-flex items-center gap-2 badge-hot text-base px-6 py-3 rounded-lg w-fit hover:opacity-90 transition-opacity shadow-md"
       >
         ดูสินค้าทั้งหมด
         <ArrowRight class="w-4 h-4" />
@@ -37,38 +37,38 @@
       <NuxtLink
         v-if="topProduct"
         :to="`/products/${topProduct.slug}`"
-        class="rounded-xl p-4 flex-1 flex flex-col justify-between bg-[#FFF3CD] hover:shadow-md transition-shadow min-h-[140px] lg:min-h-0 lg:flex-1"
+        class="rounded-xl p-4 flex-1 flex flex-col justify-between bg-[#FFF3CD] dark-card border border-transparent hover:shadow-md transition-shadow min-h-[140px] lg:min-h-0 lg:flex-1"
       >
         <div>
-          <div class="text-xs font-bold text-[#856404] uppercase tracking-wide flex items-center gap-1">
+          <div class="text-xs font-bold text-[#856404] dark:text-shopee/80 uppercase tracking-wide flex items-center gap-1">
             <Star class="w-3.5 h-3.5" />
             ขายดีเดือนนี้
           </div>
           <div class="text-base font-bold text-content mt-1.5 leading-snug line-clamp-2">
             {{ topProduct.name }}
           </div>
-          <div v-if="topProduct.lowestPrice" class="text-2xl font-bold text-shopee mt-1">
+          <div v-if="topProduct.lowestPrice" class="text-2xl font-bold text-shopee dark:text-shopee/90 mt-1">
             {{ formatPrice(topProduct.lowestPrice) }}
           </div>
         </div>
-        <span class="text-sm text-shopee font-semibold flex items-center gap-0.5 mt-2">
+        <span class="text-sm text-shopee dark:text-shopee/80 font-semibold flex items-center gap-0.5 mt-2">
           ดูราคาทุก platform
           <ChevronRight class="w-3.5 h-3.5" />
         </span>
       </NuxtLink>
 
-      <div class="rounded-xl p-4 flex-1 flex flex-col justify-between bg-[#D1ECF1] hover:shadow-md transition-shadow min-h-[140px] lg:min-h-0 lg:flex-1">
+      <div class="rounded-xl p-4 flex-1 flex flex-col justify-between bg-[#D1ECF1] dark-card border border-transparent hover:shadow-md transition-shadow min-h-[140px] lg:min-h-0 lg:flex-1">
         <div>
-          <div class="text-xs font-bold text-[#0c5460] uppercase tracking-wide flex items-center gap-1">
+          <div class="text-xs font-bold text-[#0c5460] dark:text-content-muted uppercase tracking-wide flex items-center gap-1">
             <Users class="w-3.5 h-3.5" />
             แนะนำจากบอร์ด
           </div>
           <div class="text-base font-bold text-content mt-1.5 leading-snug line-clamp-2">
             {{ boardHighlight.title }}
           </div>
-          <div class="text-2xl font-bold text-[#0c5460] mt-1">฿299</div>
+          <div class="text-2xl font-bold text-[#0c5460] dark:text-content mt-1">฿299</div>
         </div>
-        <NuxtLink to="/board" class="text-sm text-[#0c5460] font-semibold flex items-center gap-0.5 mt-2 hover:underline">
+        <NuxtLink to="/board" class="text-sm text-[#0c5460] dark:text-shopee/80 font-semibold flex items-center gap-0.5 mt-2 hover:underline">
           อ่านรีวิว
           <ChevronRight class="w-3.5 h-3.5" />
         </NuxtLink>

@@ -1,6 +1,6 @@
 <template>
   <NuxtLink :to="`/products/${product.slug}`" class="card block overflow-hidden group">
-    <div class="relative aspect-square bg-surface-muted overflow-hidden">
+    <div class="relative aspect-square product-image-frame overflow-hidden">
       <ProductImage
         :src="product.imageUrl"
         :alt="product.name"

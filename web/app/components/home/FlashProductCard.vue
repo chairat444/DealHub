@@ -4,7 +4,7 @@
     class="bg-surface rounded-lg border border-line overflow-hidden hover:border-shopee hover:shadow-md transition-all block"
   >
     <div
-      class="bg-surface-muted relative overflow-hidden"
+      class="product-image-frame relative overflow-hidden"
       :class="imageFill ? 'aspect-square' : 'h-[150px] sm:h-[165px]'"
     >
       <ProductImage
