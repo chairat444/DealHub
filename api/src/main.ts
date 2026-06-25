@@ -16,8 +16,13 @@ async function bootstrap() {
   app.useStaticAssets(uploadsPath, { prefix: '/uploads/' });
 
   app.setGlobalPrefix('api/v1');
+  const corsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000,http://localhost:3002')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: corsOrigins.length === 1 ? corsOrigins[0] : corsOrigins,
     credentials: true,
   });
 

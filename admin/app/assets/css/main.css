@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-page: 245 245 245;
+    --bg-surface: 255 255 255;
+    --bg-surface-muted: 249 250 251;
+    --text-primary: 17 24 39;
+    --text-muted: 107 114 128;
+    --border-default: 229 231 235;
+    --accent-display: 238 77 45;
+  }
+
+  body {
+    @apply bg-page text-content font-sans antialiased text-base;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#EE4D2D] hover:bg-[#D73211] text-white font-medium text-base px-6 py-3 rounded-sm transition-colors;
+  }
+
+  .btn-outline {
+    @apply border border-[#EE4D2D] text-[#EE4D2D] hover:bg-[#FFF6F4] font-medium text-base px-6 py-3 rounded-sm transition-colors;
+  }
+
+  .card {
+    @apply bg-surface rounded-sm shadow-sm border border-line;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 text-base border border-line rounded-sm bg-surface text-content focus:outline-none focus:border-[#EE4D2D] focus:ring-1 focus:ring-[#EE4D2D];
+  }
+
+  .nav-link {
+    @apply block px-3 py-2 rounded-sm text-sm text-content-muted hover:bg-surface-muted hover:text-content transition-colors;
+  }
+
+  .nav-link.router-link-active {
+    @apply bg-[#FFF6F4] text-shopee font-medium;
+  }
+}

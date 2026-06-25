@@ -20,6 +20,9 @@ export const SEO = {
     'เทียบราคาสินค้าออนไลน์จาก Shopee, Lazada และ TikTok Shop ในที่เดียว ดู Flash Sale สินค้ามาแรง สินค้าขายดี และประวัติราคา ช้อปออนไลน์ราคาถูกที่สุดก่อนซื้อ',
 
   ogImageAlt: 'DealHub TH — เทียบราคาสินค้า Shopee Lazada TikTok Shop',
+
+  /** รูปแชร์ social — ใช้ PNG 1200×630 */
+  ogImagePath: '/og-image.png',
 } as const
 
 /** หัวข้อ H1/H2 บนหน้าแรก — เน้นคำค้นหา */

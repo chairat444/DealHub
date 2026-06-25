@@ -26,6 +26,8 @@
       </div>
 
       <HomeBoardSpotlight />
+
+      <HomeFaq />
     </div>
 
     <HomeMobileBottomNav />

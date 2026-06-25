@@ -50,7 +50,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-dealhub-th-jwt-secret}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dealhub-th-refresh-secret}
       PORT: 3001
-      CORS_ORIGIN: http://localhost:3000
+      CORS_ORIGIN: http://localhost:3000,http://localhost:3002
       NODE_ENV: production
     depends_on:
       mysql:
@@ -66,6 +66,20 @@ services:
     restart: unless-stopped
     ports:
       - '3000:3000'
+    environment:
+      NUXT_PUBLIC_API_BASE: http://api:3001/api/v1
+      NUXT_PUBLIC_SITE_URL: http://localhost:3000
+    depends_on:
+      - api
+
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    container_name: dealhub-admin
+    restart: unless-stopped
+    ports:
+      - '3002:3002'
     environment:
       NUXT_PUBLIC_API_BASE: http://api:3001/api/v1
       NUXT_PUBLIC_SITE_URL: http://localhost:3000

@@ -9,9 +9,9 @@
   "lang": "th",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
       "purpose": "any"
     },
     {

@@ -64,6 +64,16 @@ const route = useRoute()
 const { apiFetch } = useApi()
 
 const query = computed(() => (route.query.q as string) || '')
+
+/** Index only bare /search — parameterized results are thin/duplicate for crawlers */
+const hasSearchParams = computed(() =>
+  Object.keys(route.query).some((key) => {
+    const value = route.query[key]
+    if (Array.isArray(value)) return value.some((v) => String(v).trim() !== '')
+    return value != null && String(value).trim() !== ''
+  }),
+)
+
 const sort = ref((route.query.sort as string) || 'sold')
 const marketplace = ref((route.query.marketplace as string) || '')
 const page = ref(1)
@@ -88,6 +98,7 @@ useSiteSeo({
     query.value
       ? `ผลการค้นหา "${query.value}" เปรียบเทียบราคาจาก Shopee, Lazada, TikTok Shop`
       : 'ค้นหาและเปรียบเทียบราคาสินค้าจาก Shopee, Lazada, TikTok Shop',
-  path: () => route.fullPath,
+  path: '/search',
+  noindex: () => hasSearchParams.value,
 })
 </script>

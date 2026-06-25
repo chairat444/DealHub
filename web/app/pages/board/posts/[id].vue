@@ -150,6 +150,7 @@
 import type { BoardPostDetail } from '~/types/board'
 
 const route = useRoute()
+const config = useRuntimeConfig()
 const authStore = useAuthStore()
 const { fetchPost, addComment, toggleUpvote, deletePost } = useBoard()
 
@@ -173,12 +174,35 @@ watch(post, (p) => {
   }
 }, { immediate: true })
 
-useSiteSeo(computed(() => ({
-  title: post.value?.title ?? 'โพสต์บอร์ด',
-  description: post.value?.excerpt ?? post.value?.body?.slice(0, 160) ?? 'อ่านโพสต์และความคิดเห็นจากชุมชน DealHub TH',
-  path: `/board/posts/${postId}`,
-  noindex: true,
-})))
+useSiteSeo(computed(() => {
+  const p = post.value
+  const description = p?.excerpt ?? p?.body?.slice(0, 160) ?? 'อ่านโพสต์และความคิดเห็นจากชุมชน DealHub TH'
+  const site = config.public.siteUrl as string
+  return {
+    title: p?.title ?? 'โพสต์บอร์ด',
+    description,
+    path: `/board/posts/${postId}`,
+    jsonLd: p
+      ? [
+          buildDiscussionForumPostingJsonLd({
+            id: p.id,
+            title: p.title,
+            body: p.body,
+            excerpt: p.excerpt,
+            createdAt: p.createdAt,
+            authorName: p.authorUsername ? `@${p.authorUsername}` : p.username,
+            upvotes: p.upvotes,
+            commentCount: p.comments.length,
+          }, site),
+          buildBreadcrumbJsonLd([
+            { name: 'หน้าแรก', path: '/' },
+            { name: 'บอร์ดชุมชน', path: '/board' },
+            { name: p.title, path: `/board/posts/${postId}` },
+          ], site),
+        ]
+      : undefined,
+  }
+}))
 
 const isOwner = computed(() =>
   authStore.isLoggedIn && post.value?.userId === authStore.user?.id,

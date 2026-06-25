@@ -53,10 +53,18 @@
           ตั้งค่าโปรไฟล์
         </NuxtLink>
 
-        <NuxtLink v-if="authStore.isAdmin" to="/admin" class="user-menu-item" role="menuitem" @click="open = false">
+        <a
+          v-if="authStore.isAdmin"
+          :href="adminUrl"
+          target="_blank"
+          rel="noopener"
+          class="user-menu-item"
+          role="menuitem"
+          @click="open = false"
+        >
           <Shield class="w-4 h-4" />
           แอดมิน
-        </NuxtLink>
+        </a>
 
         <div class="border-t border-line my-1" />
 
@@ -74,8 +82,11 @@ import { ChevronDown, LogOut, Settings, Shield, User } from 'lucide-vue-next'
 import { onClickOutside } from '@vueuse/core'
 
 const authStore = useAuthStore()
+const config = useRuntimeConfig()
 const menuRoot = ref<HTMLElement | null>(null)
 const open = ref(false)
+
+const adminUrl = config.public.adminUrl as string
 
 onClickOutside(menuRoot, () => { open.value = false })
 

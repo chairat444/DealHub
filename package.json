@@ -1,17 +1,22 @@
 {
   "name": "affiliate-discovery-platform",
   "private": true,
-  "workspaces": ["api", "web"],
+  "workspaces": ["api", "web", "admin"],
   "scripts": {
     "dev:api": "npm run start:dev -w api",
     "dev:web": "npm run dev -w web",
+    "dev:admin": "npm run dev -w admin",
     "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
-    "build": "cd api && npm run build && cd ../web && npm run build",
+    "dev:all": "concurrently \"npm run dev:api\" \"npm run dev:web\" \"npm run dev:admin\"",
+    "build": "cd api && npm run build && cd ../web && npm run build && cd ../admin && npm run build",
     "db:migrate": "cd api && npx prisma migrate dev",
     "db:deploy": "cd api && npx prisma migrate deploy",
     "db:seed": "cd api && npm run db:seed",
     "db:setup": "bash api/scripts/db-setup.sh",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

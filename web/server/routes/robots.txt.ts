@@ -4,11 +4,12 @@ export default defineEventHandler((event) => {
 
   const body = `User-agent: *
 Allow: /
-Disallow: /admin
 Disallow: /auth/
 Disallow: /compare
 Disallow: /wishlist
 Disallow: /notifications
+Disallow: /settings
+Disallow: /profile
 
 Sitemap: ${siteUrl}/sitemap.xml
 `

@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole } from '@prisma/client';
+import { BannerPlacement, PrismaClient, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { demoProducts } from './demo-products';
 import { boardDemoUsers, boardGroupDefs, boardPostSeeds } from './demo-board';
@@ -269,6 +269,21 @@ async function main() {
     await prisma.user.update({
       where: { id: u.id },
       data: { tier: resolveTier(u.dealScore, postCount) },
+    });
+  }
+
+  const heroBannerCount = await prisma.banner.count({ where: { placement: BannerPlacement.HERO } });
+  if (heroBannerCount === 0) {
+    await prisma.banner.create({
+      data: {
+        placement: BannerPlacement.HERO,
+        title: 'DealHub TH',
+        imageUrl: '/hero-banner.png',
+        linkUrl: '/search',
+        altText: 'DealHub TH — เทียบราคา Shopee Lazada TikTok Shop',
+        sortOrder: 0,
+        isActive: true,
+      },
     });
   }
 

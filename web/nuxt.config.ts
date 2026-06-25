@@ -31,7 +31,9 @@ export default defineNuxtConfig({
         { property: 'og:type', content: 'website' },
         { property: 'og:title', content: SEO.homeTitle },
         { property: 'og:description', content: SEO.homeDescription },
-        { property: 'og:image', content: '/og-image.svg' },
+        { property: 'og:image', content: SEO.ogImagePath },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
         { property: 'og:image:alt', content: SEO.ogImageAlt },
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: SEO.homeTitle },
@@ -60,6 +62,7 @@ export default defineNuxtConfig({
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3001/api/v1',
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      adminUrl: process.env.NUXT_PUBLIC_ADMIN_URL || 'http://localhost:3002',
     },
   },
 

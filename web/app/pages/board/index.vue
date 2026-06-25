@@ -206,10 +206,16 @@ import { formatBoardLatestLabel } from '~/composables/useBoard'
 import { POST_TYPE_OPTIONS } from '~/constants/member'
 import type { BoardGroupSlug } from '~/types/board'
 
+const config = useRuntimeConfig()
+const siteUrl = config.public.siteUrl as string
+const boardTitle = 'บอร์ดชุมชน — รีวิวและแนะนำสินค้า'
+const boardDescription = 'พูดคุยกับคนไทย แชร์รีวิวสินค้า เทียบราคา และแนะนำของดีจาก Shopee, Lazada, TikTok Shop'
+
 useSiteSeo({
-  title: 'บอร์ดชุมชน — รีวิวและแนะนำสินค้า',
-  description: 'พูดคุยกับคนไทย แชร์รีวิวสินค้า เทียบราคา และแนะนำของดีจาก Shopee, Lazada, TikTok Shop',
+  title: boardTitle,
+  description: boardDescription,
   path: '/board',
+  jsonLd: () => buildBoardPageJsonLd(siteUrl, boardTitle, boardDescription),
 })
 
 const route = useRoute()

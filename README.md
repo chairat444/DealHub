@@ -54,7 +54,18 @@ npm run dev
 
 Web: http://localhost:3000
 
-### 4. Docker (All-in-one)
+### 4. Admin Panel (แยกจากหน้าเว็บ)
+
+```bash
+cd admin
+npm install
+npm run dev
+```
+
+Admin: http://localhost:3002  
+Login ด้วยบัญชี Admin (`admin@dealhub.th`)
+
+### 5. Docker (All-in-one)
 
 ```bash
 docker compose up -d
@@ -86,12 +97,14 @@ affiliate-discovery-platform/
 │           ├── admin/
 │           ├── ai-reviews/
 │           └── board/
-├── web/                    # Nuxt 4 Frontend
-│   ├── components/
-│   ├── composables/
-│   ├── layouts/
-│   ├── pages/
-│   └── stores/
+├── web/                    # Nuxt 4 — หน้าเว็บสาธารณะ
+│   ├── app/components/
+│   ├── app/composables/
+│   ├── app/layouts/
+│   ├── app/pages/
+│   └── app/stores/
+├── admin/                  # Nuxt 4 — แผงผู้ดูแล (แยก app, port 3002)
+│   └── app/pages/          # แดชบอร์ด, หมวดหมู่, แบนเนอร์
 ├── docs/                   # Architecture documentation
 └── docker-compose.yml
 ```
@@ -107,7 +120,7 @@ affiliate-discovery-platform/
 - 🤖 สรุปรีวิวด้วย AI
 - 🔗 Affiliate Click Tracking
 - 💬 บอร์ดชุมชน (โพสต์, คอมเมนต์, โหวต)
-- ⚙️ ระบบ Admin Dashboard (RBAC)
+- ⚙️ แผง Admin แยกต่างหาก (port 3002 / admin.dealhub.th)
 
 ## Documentation
 

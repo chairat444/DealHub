@@ -43,10 +43,16 @@
 <script setup lang="ts">
 import { Trophy } from 'lucide-vue-next'
 
+const config = useRuntimeConfig()
+const siteUrl = config.public.siteUrl as string
+const leaderboardTitle = 'Leaderboard นักล่าดีล'
+const leaderboardDescription = 'อันดับสมาชิก DealHub TH ที่มี Deal Score สูงสุดในชุมชน'
+
 useSiteSeo({
-  title: 'Leaderboard นักล่าดีล',
-  description: 'อันดับสมาชิก DealHub TH ที่มี Deal Score สูงสุด',
+  title: leaderboardTitle,
+  description: leaderboardDescription,
   path: '/leaderboard',
+  jsonLd: () => buildLeaderboardPageJsonLd(siteUrl, leaderboardTitle, leaderboardDescription),
 })
 
 const { fetchLeaderboard } = useMember()

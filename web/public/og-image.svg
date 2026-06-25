@@ -3,7 +3,7 @@
   <rect x="0" y="420" width="1200" height="210" fill="#c13515"/>
   <circle cx="1050" cy="120" r="180" fill="#FFD600" opacity="0.15"/>
   <text x="80" y="200" font-family="system-ui,sans-serif" font-size="88" font-weight="700" fill="#fff">Deal<tspan fill="#FFD600">Hub</tspan> TH</text>
-  <text x="80" y="290" font-family="system-ui,sans-serif" font-size="36" fill="rgba(255,255,255,0.9)">@5"#22*4I22 Shopee · Lazada · TikTok Shop</text>
-  <rect x="80" y="340" width="320" height="56" rx="8" fill="#FFD600"/>
-  <text x="240" y="377" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" font-weight="700" fill="#c13515">@#5"@5"#22C5H@5"'</text>
+  <text x="80" y="290" font-family="system-ui,sans-serif" font-size="36" fill="rgba(255,255,255,0.9)">Compare prices from Shopee · Lazada · TikTok Shop</text>
+  <rect x="80" y="340" width="360" height="56" rx="8" fill="#FFD600"/>
+  <text x="260" y="377" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" font-weight="700" fill="#c13515">Shop smarter together</text>
 </svg>

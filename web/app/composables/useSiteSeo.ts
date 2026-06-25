@@ -1,6 +1,7 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { toValue } from 'vue'
 import { SEO } from '~/constants/seo'
+import { HOME_FAQ } from '~/constants/faq'
 
 export const SITE = {
   name: SEO.siteName,
@@ -13,6 +14,7 @@ export const SITE = {
   themeColor: SEO.themeColor,
   locale: SEO.locale,
   ogImageAlt: SEO.ogImageAlt,
+  ogImagePath: SEO.ogImagePath,
 } as const
 
 export interface SiteSeoOptions {
@@ -21,7 +23,7 @@ export interface SiteSeoOptions {
   keywords?: MaybeRefOrGetter<string>
   image?: MaybeRefOrGetter<string | null | undefined>
   path?: MaybeRefOrGetter<string>
-  noindex?: boolean
+  noindex?: MaybeRefOrGetter<boolean>
   /** ใช้ title เต็ม ไม่ต่อ suffix */
   titleFull?: boolean
   jsonLd?: MaybeRefOrGetter<Record<string, unknown> | Record<string, unknown>[] | undefined>
@@ -54,7 +56,7 @@ export function useSiteSeo(options: SiteSeoOptions = {}) {
   const ogImage = computed(() => {
     const img = toValue(options.image)
     if (img) return resolveUrl(siteUrl, img)
-    return resolveUrl(siteUrl, '/og-image.svg')
+    return resolveUrl(siteUrl, SITE.ogImagePath)
   })
 
   const canonical = computed(() => {
@@ -62,7 +64,11 @@ export function useSiteSeo(options: SiteSeoOptions = {}) {
     return resolveUrl(siteUrl, path)
   })
 
-  const robots = options.noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+  const robots = computed(() =>
+    toValue(options.noindex)
+      ? 'noindex, nofollow'
+      : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+  )
 
   useHead({
     title: pageTitle,
@@ -245,6 +251,22 @@ export function buildItemListJsonLd(
   }
 }
 
+export function buildFaqPageJsonLd(items: Array<{ question: string; answer: string }>) {
+  if (!items.length) return undefined
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  }
+}
+
 export function buildHomePageJsonLd(
   siteUrl: string,
   products: Array<{ name: string; slug: string; lowestPrice?: number | null }>,
@@ -257,6 +279,9 @@ export function buildHomePageJsonLd(
 
   const itemList = buildItemListJsonLd(siteUrl, 'สินค้าขายดีและมาแรงบน DealHub TH', products)
   if (itemList) schemas.push(itemList)
+
+  const faqPage = buildFaqPageJsonLd(HOME_FAQ)
+  if (faqPage) schemas.push(faqPage)
 
   return schemas
 }
@@ -278,5 +303,76 @@ export function buildCategoryJsonLd(category: {
       name: SITE.name,
       url: siteUrl,
     },
+  }
+}
+
+export function buildDiscussionForumPostingJsonLd(
+  post: {
+    id: string
+    title: string
+    body?: string | null
+    excerpt?: string | null
+    createdAt: string
+    authorName: string
+    upvotes: number
+    commentCount: number
+  },
+  siteUrl: string,
+) {
+  const base = siteUrl.replace(/\/$/, '')
+  const url = `${base}/board/posts/${post.id}`
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'DiscussionForumPosting',
+    headline: post.title,
+    text: post.body || post.excerpt || post.title,
+    datePublished: post.createdAt,
+    author: { '@type': 'Person', name: post.authorName },
+    url,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: base },
+    interactionStatistic: [
+      {
+        '@type': 'InteractionCounter',
+        interactionType: 'https://schema.org/LikeAction',
+        userInteractionCount: post.upvotes,
+      },
+      {
+        '@type': 'InteractionCounter',
+        interactionType: 'https://schema.org/CommentAction',
+        userInteractionCount: post.commentCount,
+      },
+    ],
+  }
+}
+
+export function buildBoardPageJsonLd(siteUrl: string, title: string, description: string) {
+  const base = siteUrl.replace(/\/$/, '')
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: `${base}/board`,
+    inLanguage: 'th',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: base },
+    about: {
+      '@type': 'Thing',
+      name: 'ชุมชนผู้ช้อปออนไลน์',
+      description: 'พื้นที่พูดคุย รีวิวสินค้า และแชร์ดีล',
+    },
+  }
+}
+
+export function buildLeaderboardPageJsonLd(siteUrl: string, title: string, description: string) {
+  const base = siteUrl.replace(/\/$/, '')
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: `${base}/leaderboard`,
+    inLanguage: 'th',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: base },
   }
 }
