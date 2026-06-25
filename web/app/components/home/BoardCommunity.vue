@@ -5,7 +5,7 @@
   >
     <!-- Header -->
     <div
-      class="bg-gradient-to-r from-shopee to-[#FF6633] text-white"
+      class="board-header"
       :class="compact ? 'px-4 py-3' : 'px-4 py-4'"
     >
       <div class="flex flex-col gap-2">

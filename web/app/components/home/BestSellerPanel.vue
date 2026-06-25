@@ -1,11 +1,11 @@
 <template>
   <section class="section-card px-4 py-4 mb-2.5 h-full">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-xl font-bold text-shopee flex items-center gap-2">
+      <h2 class="text-xl font-bold text-accent flex items-center gap-2">
         <Trophy class="w-6 h-6" />
         ขายดีประจำเดือน
       </h2>
-      <NuxtLink to="/search?sort=sold" class="text-sm text-shopee flex items-center gap-0.5 hover:underline">
+      <NuxtLink to="/search?sort=sold" class="text-sm text-accent flex items-center gap-0.5 hover:underline">
         ดูทั้งหมด
         <ChevronRight class="w-3 h-3" />
       </NuxtLink>
@@ -35,7 +35,7 @@
         </div>
         <div class="flex-1 min-w-0">
           <div class="text-sm md:text-base text-content truncate">{{ product.name }}</div>
-          <div v-if="product.lowestPrice" class="text-base font-bold text-shopee">
+          <div v-if="product.lowestPrice" class="text-base font-bold text-accent">
             {{ formatPrice(product.lowestPrice) }}
           </div>
           <div v-if="product.soldCount" class="text-sm text-content-muted">
@@ -57,9 +57,9 @@ defineProps<{
 }>()
 
 function rankClass(index: number) {
-  if (index === 0) return 'bg-[#FFD700] text-[#856404]'
-  if (index === 1) return 'bg-[#C0C0C0] text-gray-600'
-  if (index === 2) return 'bg-[#CD7F32] text-[#5a3000]'
+  if (index === 0) return 'bg-[#FFD700] dark:bg-amber-900/50 text-[#856404] dark:text-amber-300'
+  if (index === 1) return 'bg-[#C0C0C0] dark:bg-gray-600/40 text-gray-600 dark:text-gray-300'
+  if (index === 2) return 'bg-[#CD7F32] dark:bg-orange-900/40 text-[#5a3000] dark:text-orange-300'
   return 'bg-surface-muted text-content-muted'
 }
 </script>

@@ -2,13 +2,13 @@
   <section class="mb-2.5">
     <div class="flex items-center justify-between mb-3 px-0.5">
       <div class="flex items-center gap-2">
-        <Flame class="w-5 h-5 text-shopee" />
-        <h2 class="text-lg font-bold text-gray-900">สินค้ามาแรง</h2>
-        <span class="text-[10px] bg-shopee text-white font-bold px-2 py-0.5 rounded-full animate-pulse">
+        <Flame class="w-5 h-5 text-accent" />
+        <h2 class="text-lg font-bold text-content">สินค้ามาแรง</h2>
+        <span class="text-[10px] badge-shopee font-bold px-2 py-0.5 rounded-full animate-pulse">
           LIVE
         </span>
       </div>
-      <NuxtLink to="/search?sort=sold" class="text-xs text-shopee font-semibold hover:underline">
+      <NuxtLink to="/search?sort=sold" class="text-xs text-accent font-semibold hover:underline">
         ดูทั้งหมด →
       </NuxtLink>
     </div>
@@ -18,43 +18,43 @@
         v-for="product in products"
         :key="product.id"
         :to="`/products/${product.slug}`"
-        class="snap-start shrink-0 w-[168px] sm:w-[185px] bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-shopee hover:shadow-md transition-all group"
+        class="snap-start shrink-0 w-[168px] sm:w-[185px] card overflow-hidden hover:border-shopee/50 hover:shadow-md transition-all group"
       >
-        <div class="relative h-[168px] bg-gray-100 overflow-hidden">
-          <img
-            v-if="product.imageUrl"
+        <div class="relative h-[168px] product-image-frame overflow-hidden">
+          <ProductImage
             :src="product.imageUrl"
             :alt="product.name"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            :category-slug="product.category?.slug"
+            container-class="absolute inset-0"
+            img-class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          <span v-else class="w-full h-full flex items-center justify-center text-5xl">📦</span>
 
           <span
             v-if="product.isTrending"
-            class="absolute top-2 left-2 bg-shopee text-white text-[9px] font-bold px-1.5 py-0.5 rounded"
+            class="absolute top-2 left-2 badge-shopee text-[9px] px-1.5 py-0.5 rounded z-10"
           >
             🔥 มาแรง
           </span>
           <span
             v-if="getDiscount(product)"
-            class="absolute top-2 right-2 bg-[#d4006a] text-white text-[9px] font-bold px-1.5 py-0.5 rounded"
+            class="absolute top-2 right-2 badge-discount text-[9px] px-1.5 py-0.5 rounded z-10"
           >
             -{{ getDiscount(product) }}%
           </span>
         </div>
 
         <div class="p-3">
-          <h3 class="text-xs font-medium text-gray-800 line-clamp-2 min-h-[32px] leading-snug group-hover:text-shopee">
+          <h3 class="text-xs font-medium text-content line-clamp-2 min-h-[32px] leading-snug group-hover:text-accent">
             {{ product.name }}
           </h3>
-          <div class="mt-2 text-lg font-bold text-shopee">
+          <div class="mt-2 text-lg font-bold text-accent">
             {{ product.lowestPrice ? formatPrice(product.lowestPrice) : '—' }}
           </div>
           <div v-if="product.listings?.length" class="mt-1.5 flex gap-1">
             <span
               v-for="listing in product.listings.slice(0, 2)"
               :key="listing.id"
-              class="text-[9px] px-1 py-px rounded font-semibold bg-gray-100 text-gray-600"
+              class="text-[9px] px-1 py-px rounded font-semibold bg-surface-muted text-content-muted"
             >
               {{ marketplaceLabel(listing.marketplace) }}
             </span>

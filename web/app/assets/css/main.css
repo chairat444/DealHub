@@ -15,6 +15,7 @@
     --text-primary: 17 24 39;
     --text-muted: 107 114 128;
     --border-default: 229 231 235;
+    --accent-display: 238 77 45;
   }
 
   .dark {
@@ -27,6 +28,7 @@
     --text-primary: 229 231 235;
     --text-muted: 156 163 175;
     --border-default: 42 42 42;
+    --accent-display: 224 122 95;
   }
 
   html {
@@ -39,17 +41,18 @@
   }
 
   .dark img.product-photo {
-    filter: brightness(0.88) contrast(1.02);
+    filter: brightness(0.76) contrast(1.04) saturate(0.85);
   }
 }
 
 @layer components {
   .btn-primary {
     @apply bg-[#EE4D2D] hover:bg-[#D73211] text-white font-medium text-base px-6 py-3 rounded-sm transition-colors duration-200;
+    @apply dark:bg-[#c94a32] dark:hover:bg-[#b5422d];
   }
 
   .btn-outline {
-    @apply border border-[#EE4D2D] text-[#EE4D2D] hover:bg-[#FFF6F4] dark:border-shopee/50 dark:text-shopee/90 dark:hover:bg-shopee/10 font-medium text-base px-6 py-3 rounded-sm transition-colors duration-200;
+    @apply border border-[#EE4D2D] text-[#EE4D2D] hover:bg-[#FFF6F4] dark:border-shopee/40 dark:text-[rgb(var(--accent-display))] dark:hover:bg-shopee/10 font-medium text-base px-6 py-3 rounded-sm transition-colors duration-200;
   }
 
   .card {
@@ -64,15 +67,61 @@
 
   .input-field {
     @apply w-full px-4 py-3 text-base border border-line rounded-sm bg-surface text-content focus:outline-none focus:border-[#EE4D2D] focus:ring-1 focus:ring-[#EE4D2D] transition-colors;
+    @apply dark:focus:border-shopee/50 dark:focus:ring-shopee/30;
   }
 
   .badge-shopee {
     @apply inline-flex items-center px-2.5 py-0.5 rounded text-sm font-medium bg-[#EE4D2D] text-white;
+    @apply dark:bg-shopee/35 dark:text-[rgb(var(--accent-display))];
   }
 
   .badge-hot {
     @apply bg-[#FFD600] text-[#c13515] font-bold;
-    @apply dark:bg-shopee/20 dark:text-shopee dark:border dark:border-shopee/30;
+    @apply dark:bg-shopee/25 dark:text-[rgb(var(--accent-display))] dark:border dark:border-shopee/30;
+  }
+
+  .badge-discount {
+    @apply bg-[#d4006a] text-white font-bold;
+    @apply dark:bg-shopee/30 dark:text-[rgb(var(--accent-display))] dark:border dark:border-shopee/25;
+  }
+
+  .text-accent {
+    @apply text-shopee dark:text-[rgb(var(--accent-display))];
+  }
+
+  .btn-search {
+    @apply bg-[#FFD600] hover:bg-[#f5cc00] text-shopee transition-colors;
+    @apply dark:bg-shopee/35 dark:hover:bg-shopee/45 dark:text-[rgb(var(--accent-display))] dark:border-l dark:border-line;
+  }
+
+  .site-header {
+    @apply bg-shopee;
+    @apply dark:bg-[#181210] dark:border-b dark:border-line;
+  }
+
+  .site-subnav {
+    @apply bg-[#c13515];
+    @apply dark:bg-[#120a08];
+  }
+
+  .board-header {
+    @apply bg-gradient-to-r from-shopee to-[#FF6633] text-white;
+    @apply dark:from-[#2a1814] dark:to-[#1f1210] dark:border-b dark:border-line;
+  }
+
+  .hero-banner {
+    @apply bg-shopee;
+    @apply dark:bg-gradient-to-br dark:from-[#2f1c17] dark:to-[#1a100d];
+  }
+
+  .hero-banner-accent {
+    @apply bg-[#c13515];
+    @apply dark:bg-[#1f100c]/80;
+  }
+
+  .countdown-box {
+    @apply bg-shopee text-white;
+    @apply dark:bg-shopee/25 dark:text-[rgb(var(--accent-display))] dark:border dark:border-shopee/30;
   }
 
   .dark-card {
@@ -89,16 +138,32 @@
   }
 
   .board-group-card.is-active {
-    @apply dark:!border-shopee/40 dark:!bg-surface;
+    @apply dark:!border-shopee/35 dark:!bg-surface;
   }
 
   .product-image-frame {
-    @apply bg-surface-muted;
-    @apply dark:bg-[#1a1a1a];
+    @apply bg-surface-muted relative;
+    @apply dark:bg-[#141414];
   }
 
-  .marketplace-shopee { @apply bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300/90; }
-  .marketplace-lazada { @apply bg-blue-100 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300/90; }
+  .product-image-frame::after {
+    content: '';
+    @apply absolute inset-0 pointer-events-none opacity-0;
+    @apply dark:opacity-100;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.08) 0%,
+      rgba(0, 0, 0, 0.18) 100%
+    );
+  }
+
+  .site-footer {
+    @apply bg-gray-800 text-gray-300;
+    @apply dark:bg-page dark:text-content-muted dark:border-t dark:border-line;
+  }
+
+  .marketplace-shopee { @apply bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300/90; }
+  .marketplace-lazada { @apply bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300/90; }
   .marketplace-tiktok { @apply bg-gray-900 text-white dark:bg-gray-800 dark:text-gray-200; }
 
   .page-container {

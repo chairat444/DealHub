@@ -31,7 +31,7 @@
           #1 ขายดีสุด
         </div>
 
-        <div class="relative aspect-square overflow-hidden">
+        <div class="relative aspect-square overflow-hidden product-image-frame">
           <ProductImage
             :src="product.imageUrl"
             :alt="product.name"
@@ -41,7 +41,7 @@
           />
           <div
             v-if="getDiscount(product)"
-            class="absolute bottom-2 right-2 bg-[#d4006a] dark:bg-[#d4006a]/75 text-white text-sm font-bold px-2.5 py-1 rounded-lg shadow z-10"
+            class="absolute bottom-2 right-2 badge-discount text-sm px-2.5 py-1 rounded-lg shadow z-10"
           >
             ลด {{ getDiscount(product) }}%
           </div>

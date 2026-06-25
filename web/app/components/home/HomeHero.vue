@@ -1,8 +1,8 @@
 <template>
   <section class="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-3 mb-2.5">
     <!-- Hero main -->
-    <div class="bg-shopee rounded-xl p-8 lg:p-10 min-h-[260px] lg:min-h-[300px] flex flex-col justify-end relative overflow-hidden dark:brightness-[0.92]">
-      <div class="absolute right-0 top-0 bottom-0 w-[55%] bg-[#c13515] [clip-path:polygon(20%_0,100%_0,100%_100%,0%_100%)]" />
+    <div class="hero-banner rounded-xl p-8 lg:p-10 min-h-[260px] lg:min-h-[300px] flex flex-col justify-end relative overflow-hidden">
+      <div class="hero-banner-accent absolute right-0 top-0 bottom-0 w-[55%] [clip-path:polygon(20%_0,100%_0,100%_100%,0%_100%)]" />
 
       <span class="relative z-10 inline-flex items-center gap-1.5 badge-hot text-sm px-3 py-1 rounded-md w-fit mb-3">
         <Zap class="w-3.5 h-3.5" />
@@ -27,7 +27,7 @@
           v-for="i in 3"
           :key="i"
           class="h-2 rounded-full transition-all"
-          :class="i === activeSlide ? 'bg-[#FFD600] w-5' : 'bg-white/40 w-2'"
+          :class="i === activeSlide ? 'bg-[#FFD600] dark:bg-[rgb(var(--accent-display))] w-5' : 'bg-white/40 dark:bg-white/25 w-2'"
         />
       </div>
     </div>
@@ -47,11 +47,11 @@
           <div class="text-base font-bold text-content mt-1.5 leading-snug line-clamp-2">
             {{ topProduct.name }}
           </div>
-          <div v-if="topProduct.lowestPrice" class="text-2xl font-bold text-shopee dark:text-shopee/90 mt-1">
+          <div v-if="topProduct.lowestPrice" class="text-2xl font-bold text-accent mt-1">
             {{ formatPrice(topProduct.lowestPrice) }}
           </div>
         </div>
-        <span class="text-sm text-shopee dark:text-shopee/80 font-semibold flex items-center gap-0.5 mt-2">
+        <span class="text-sm text-accent font-semibold flex items-center gap-0.5 mt-2">
           ดูราคาทุก platform
           <ChevronRight class="w-3.5 h-3.5" />
         </span>
@@ -68,7 +68,7 @@
           </div>
           <div class="text-2xl font-bold text-[#0c5460] dark:text-content mt-1">฿299</div>
         </div>
-        <NuxtLink to="/board" class="text-sm text-[#0c5460] dark:text-shopee/80 font-semibold flex items-center gap-0.5 mt-2 hover:underline">
+        <NuxtLink to="/board" class="text-sm text-accent font-semibold flex items-center gap-0.5 mt-2 hover:underline">
           อ่านรีวิว
           <ChevronRight class="w-3.5 h-3.5" />
         </NuxtLink>

@@ -38,7 +38,7 @@
       </h3>
 
       <div class="mt-2 flex items-baseline gap-2 flex-wrap">
-        <span v-if="product.lowestPrice" class="text-lg font-bold text-shopee">
+        <span v-if="product.lowestPrice" class="text-lg font-bold text-accent">
           {{ formatPrice(product.lowestPrice) }}
         </span>
         <span v-if="originalPrice" class="text-sm text-content-muted line-through">
@@ -96,9 +96,9 @@ const badgeLabel = computed(() => {
 })
 
 const badgeClass = computed(() => {
-  if (discount.value && discount.value >= 40) return 'bg-[#d4006a]'
-  if (props.product.isTrending) return 'bg-shopee'
-  return 'bg-[#26aa99]'
+  if (discount.value && discount.value >= 40) return 'badge-discount'
+  if (props.product.isTrending) return 'bg-shopee dark:bg-shopee/35 dark:text-[rgb(var(--accent-display))]'
+  return 'bg-[#26aa99] dark:bg-teal-900/40 dark:text-teal-300'
 })
 
 function platClass(marketplace: string) {

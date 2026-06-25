@@ -1,6 +1,6 @@
 <template>
   <div class="bg-page min-h-screen pb-8">
-    <div class="bg-gradient-to-r from-shopee to-[#FF6633] text-white py-6">
+    <div class="board-header py-6">
       <div class="page-container">
         <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-2">
           <MessageCircle class="w-7 h-7" />

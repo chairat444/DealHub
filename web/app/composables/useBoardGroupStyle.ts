@@ -6,7 +6,7 @@ export function useBoardGroupStyle() {
 
   function cardStyle(group: BoardGroup, isActive: boolean) {
     if (isDark.value) {
-      return isActive ? { color: '#EE4D2D' } : {}
+      return isActive ? { color: 'rgb(var(--accent-display))' } : {}
     }
     return {
       background: group.bg,

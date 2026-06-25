@@ -5,7 +5,7 @@
       :key="item.to"
       :to="item.to"
       class="flex flex-col items-center gap-1 text-sm flex-1 transition-colors"
-      :class="isActive(item.to) ? 'text-shopee' : 'text-content-muted'"
+      :class="isActive(item.to) ? 'text-accent' : 'text-content-muted'"
     >
       <component :is="item.icon" class="w-6 h-6" />
       <span>{{ item.label }}</span>

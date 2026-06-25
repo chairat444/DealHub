@@ -1,25 +1,25 @@
 <template>
-  <header class="sticky top-0 z-50 bg-shopee">
+  <header class="site-header sticky top-0 z-50">
     <div class="page-container">
       <div class="flex items-center gap-3 h-14 md:h-[60px]">
-        <NuxtLink to="/" class="text-white text-xl font-bold tracking-tight shrink-0 mr-1">
-          Deal<span class="text-[#FFD600]">Hub</span>
+        <NuxtLink to="/" class="text-white dark:text-content text-xl font-bold tracking-tight shrink-0 mr-1">
+          Deal<span class="text-[#FFD600] dark:text-[rgb(var(--accent-display))]">Hub</span>
         </NuxtLink>
 
-        <form @submit.prevent="handleSearch" class="flex-1 flex items-center bg-white dark:bg-surface rounded-lg overflow-hidden h-10 md:h-11 max-w-3xl border border-transparent dark:border-line">
-          <Search class="w-5 h-5 text-gray-400 ml-3 shrink-0" />
+        <form @submit.prevent="handleSearch" class="flex-1 flex items-center bg-white dark:bg-surface-muted rounded-lg overflow-hidden h-10 md:h-11 max-w-3xl border border-transparent dark:border-line">
+          <Search class="w-5 h-5 text-gray-400 dark:text-content-muted ml-3 shrink-0" />
           <input
             v-model="searchQuery"
             type="text"
             placeholder="ค้นหาสินค้าจาก Shopee · Lazada · TikTok"
-            class="flex-1 border-none outline-none px-2 text-base text-gray-800 dark:text-content bg-transparent min-w-0"
+            class="flex-1 border-none outline-none px-2 text-base text-gray-800 dark:text-content bg-transparent min-w-0 placeholder:text-gray-400 dark:placeholder:text-content-muted"
           />
-          <button type="submit" class="bg-[#FFD600] hover:bg-[#f5cc00] h-full px-4 flex items-center text-shopee transition-colors">
+          <button type="submit" class="btn-search h-full px-4 flex items-center">
             <ArrowRight class="w-5 h-5" />
           </button>
         </form>
 
-        <div class="flex items-center gap-3 sm:gap-4 text-white text-sm shrink-0">
+        <div class="flex items-center gap-3 sm:gap-4 text-white dark:text-content text-sm shrink-0">
           <LayoutThemeToggle />
 
           <NuxtLink to="/notifications" class="nav-act hidden sm:flex">
@@ -32,7 +32,7 @@
             <span>วิชลิสต์</span>
             <span
               v-if="wishlistCount > 0"
-              class="absolute -top-1 -right-1.5 bg-[#FFD600] text-shopee rounded-full text-xs font-bold px-1.5 min-w-5 text-center"
+              class="absolute -top-1 -right-1.5 bg-[#FFD600] dark:bg-shopee/40 text-shopee dark:text-[rgb(var(--accent-display))] rounded-full text-xs font-bold px-1.5 min-w-5 text-center"
             >
               {{ wishlistCount }}
             </span>
@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <nav class="bg-[#c13515]">
+    <nav class="site-subnav">
       <div class="page-container flex items-center h-10 md:h-11 overflow-x-auto gap-0 text-sm">
         <NuxtLink to="/search?sort=sold" class="subnav-item hot whitespace-nowrap">
           <Flame class="w-3.5 h-3.5 mr-1 inline" />
@@ -70,7 +70,7 @@
         >
           {{ cat.name }}
         </NuxtLink>
-        <NuxtLink to="/search" class="subnav-item ml-auto text-[#FFD600] font-semibold whitespace-nowrap">
+        <NuxtLink to="/search" class="subnav-item ml-auto hot whitespace-nowrap">
           <LayoutGrid class="w-3.5 h-3.5 mr-1 inline" />
           ทุกหมวด
         </NuxtLink>
@@ -112,9 +112,9 @@ function handleSearch() {
   @apply flex flex-col items-center gap-1 text-sm opacity-90 hover:opacity-100 transition-opacity;
 }
 .subnav-item {
-  @apply text-white px-3 h-full flex items-center opacity-85 hover:opacity-100 hover:bg-white/10 transition-colors;
+  @apply text-white dark:text-content-muted px-3 h-full flex items-center opacity-85 hover:opacity-100 hover:bg-white/10 dark:hover:bg-white/5 transition-colors;
 }
 .subnav-item.hot {
-  @apply text-[#FFD600] font-semibold opacity-100;
+  @apply text-[#FFD600] dark:text-[rgb(var(--accent-display))] font-semibold opacity-100;
 }
 </style>

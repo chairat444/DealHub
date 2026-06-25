@@ -1,16 +1,16 @@
 <template>
   <section class="section-card px-4 py-4 mb-2.5 dark:bg-surface">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-      <h2 class="text-xl font-bold text-shopee flex items-center gap-2 flex-wrap">
+      <h2 class="text-xl font-bold text-accent flex items-center gap-2 flex-wrap">
         <Zap class="w-5 h-5" />
         Flash Sale
         <span class="text-sm font-normal text-content-muted">สิ้นสุดใน</span>
         <span class="flex items-center gap-1">
-          <span class="bg-shopee text-white rounded-md px-2.5 py-1.5 text-base font-bold tabular-nums">{{ hours }}</span>
-          <span class="text-shopee font-bold text-lg">:</span>
-          <span class="bg-shopee text-white rounded-md px-2.5 py-1.5 text-base font-bold tabular-nums">{{ minutes }}</span>
-          <span class="text-shopee font-bold text-lg">:</span>
-          <span class="bg-shopee text-white rounded-md px-2.5 py-1.5 text-base font-bold tabular-nums animate-pulse">{{ seconds }}</span>
+          <span class="countdown-box rounded-md px-2.5 py-1.5 text-base font-bold tabular-nums">{{ hours }}</span>
+          <span class="text-accent font-bold text-lg">:</span>
+          <span class="countdown-box rounded-md px-2.5 py-1.5 text-base font-bold tabular-nums">{{ minutes }}</span>
+          <span class="text-accent font-bold text-lg">:</span>
+          <span class="countdown-box rounded-md px-2.5 py-1.5 text-base font-bold tabular-nums animate-pulse">{{ seconds }}</span>
         </span>
       </h2>
       <NuxtLink to="/search?sort=sold" class="text-sm text-shopee font-semibold hover:underline shrink-0">

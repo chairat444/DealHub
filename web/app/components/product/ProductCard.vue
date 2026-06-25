@@ -11,16 +11,16 @@
       <div v-if="product.isTrending" class="absolute top-2 left-2 badge-shopee">
         🔥 มาแรง
       </div>
-      <div v-if="product.isTopSelling" class="absolute top-2 right-2 bg-yellow-400 text-gray-900 text-sm font-bold px-2 py-0.5 rounded">
+      <div v-if="product.isTopSelling" class="absolute top-2 right-2 badge-hot text-sm px-2 py-0.5 rounded">
         ขายดี
       </div>
     </div>
     <div class="p-3.5">
-      <h3 class="text-base text-content line-clamp-2 min-h-[3rem] group-hover:text-[#EE4D2D] transition-colors leading-snug">
+      <h3 class="text-base text-content line-clamp-2 min-h-[3rem] group-hover:text-accent transition-colors leading-snug">
         {{ product.name }}
       </h3>
       <div class="mt-2 flex items-baseline gap-2">
-        <span v-if="product.lowestPrice" class="text-[#EE4D2D] font-bold text-xl">
+        <span v-if="product.lowestPrice" class="text-accent font-bold text-xl">
           {{ formatPrice(product.lowestPrice) }}
         </span>
         <span v-if="product.listings && product.listings.length > 1" class="text-sm text-content-muted">
