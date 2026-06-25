@@ -1,11 +1,11 @@
 <template>
   <div class="container mx-auto px-4 py-6">
     <div class="mb-6">
-      <h1 class="text-2xl font-bold text-gray-800">
+      <h1 class="text-2xl md:text-3xl font-bold text-content">
         ผลการค้นหา
         <span v-if="query" class="text-[#EE4D2D]">"{{ query }}"</span>
       </h1>
-      <p v-if="results?.meta" class="text-gray-500 text-sm mt-1">
+      <p v-if="results?.meta" class="text-content-muted text-base mt-1">
         พบ {{ results.meta.total }} รายการ
       </p>
     </div>
@@ -28,10 +28,10 @@
     </div>
 
     <!-- Results -->
-    <div v-if="pending" class="text-center py-20 text-gray-400">กำลังค้นหา...</div>
+    <div v-if="pending" class="text-center py-20 text-content-muted">กำลังค้นหา...</div>
     <div v-else-if="!results?.items?.length" class="text-center py-20">
       <div class="text-6xl mb-4">🔍</div>
-      <p class="text-gray-500">ไม่พบสินค้าที่ค้นหา</p>
+      <p class="text-content-muted">ไม่พบสินค้าที่ค้นหา</p>
     </div>
     <template v-else>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -48,7 +48,7 @@
           v-for="p in results.meta.totalPages"
           :key="p"
           @click="page = p; refetch()"
-          :class="['px-4 py-2 rounded-sm text-sm', page === p ? 'bg-[#EE4D2D] text-white' : 'bg-white text-gray-600 hover:bg-gray-50']"
+          :class="['px-4 py-2 rounded-sm text-sm', page === p ? 'bg-[#EE4D2D] text-white' : 'bg-surface text-content-muted hover:bg-surface-muted border border-line']"
         >
           {{ p }}
         </button>
@@ -82,7 +82,12 @@ const { data: results, pending, refresh: refetch } = await useAsyncData(
   { watch: [query] },
 )
 
-useSeoMeta({
-  title: () => `ค้นหา "${query.value}" - DealHub TH`,
+useSiteSeo({
+  title: () => (query.value ? `ค้นหา "${query.value}"` : 'ค้นหาสินค้า'),
+  description: () =>
+    query.value
+      ? `ผลการค้นหา "${query.value}" เปรียบเทียบราคาจาก Shopee, Lazada, TikTok Shop`
+      : 'ค้นหาและเปรียบเทียบราคาสินค้าจาก Shopee, Lazada, TikTok Shop',
+  path: () => route.fullPath,
 })
 </script>

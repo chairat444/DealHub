@@ -34,32 +34,23 @@ async function main() {
   });
 
   const categories = await Promise.all([
+    { slug: 'electronics', name: 'อิเล็กทรอนิกส์', icon: '📱', sortOrder: 1, description: 'เทียบราคาสมาร์ทโฟน แท็บเล็ต หูฟัง และอุปกรณ์อิเล็กทรอนิกส์ จาก Shopee Lazada TikTok Shop หาราคาดีที่สุดก่อนซื้อ' },
+    { slug: 'fashion', name: 'แฟชั่น', icon: '👗', sortOrder: 2, description: 'แฟชั่นและเสื้อผ้าแบรนด์ดัง เปรียบเทียบราคาจากทุกแพลตฟอร์ม อัปเดตโปรโมชั่นและดีลล่าสุดทุกวัน' },
+    { slug: 'beauty', name: 'ความงาม', icon: '💄', sortOrder: 3, description: 'สกินแคร์ เครื่องสำอาง และผลิตภัณฑ์บำรุงความงาม เทียบราคาจากร้านค้าออนไลน์ชั้นนำในที่เดียว' },
+    { slug: 'home-living', name: 'บ้านและที่อยู่อาศัย', icon: '🏠', sortOrder: 4, description: 'เฟอร์นิเจอร์ ของใช้ในบ้าน และเครื่องใช้ไฟฟ้า เลือกซื้อในราคาคุ้มค่าจากหลายแพลตฟอร์ม' },
+    { slug: 'sports', name: 'กีฬาและกลางแจ้ง', icon: '⚽', sortOrder: 5, description: 'อุปกรณ์กีฬาและกิจกรรมกลางแจ้ง เทียบราคาและโปรโมชั่นจาก Shopee Lazada TikTok Shop' },
+  ].map((cat) =>
     prisma.category.upsert({
-      where: { slug: 'electronics' },
-      update: {},
-      create: { name: 'อิเล็กทรอนิกส์', slug: 'electronics', icon: '📱', sortOrder: 1 },
+      where: { slug: cat.slug },
+      update: {
+        name: cat.name,
+        icon: cat.icon,
+        sortOrder: cat.sortOrder,
+        description: cat.description,
+      },
+      create: cat,
     }),
-    prisma.category.upsert({
-      where: { slug: 'fashion' },
-      update: {},
-      create: { name: 'แฟชั่น', slug: 'fashion', icon: '👗', sortOrder: 2 },
-    }),
-    prisma.category.upsert({
-      where: { slug: 'beauty' },
-      update: {},
-      create: { name: 'ความงาม', slug: 'beauty', icon: '💄', sortOrder: 3 },
-    }),
-    prisma.category.upsert({
-      where: { slug: 'home-living' },
-      update: {},
-      create: { name: 'บ้านและที่อยู่อาศัย', slug: 'home-living', icon: '🏠', sortOrder: 4 },
-    }),
-    prisma.category.upsert({
-      where: { slug: 'sports' },
-      update: {},
-      create: { name: 'กีฬาและกลางแจ้ง', slug: 'sports', icon: '⚽', sortOrder: 5 },
-    }),
-  ]);
+  ));
 
   const sampleProducts = [
     {
@@ -72,7 +63,7 @@ async function main() {
       soldCount: 8500,
       isTrending: true,
       isTopSelling: true,
-      imageUrl: 'https://images.unsplash.com/photo-1695048133142-1c204c3fafb5?w=400',
+      imageUrl: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&q=80',
       searchKeywords: 'iphone 15 pro max apple สมาร์ทโฟน',
       listings: [
         { marketplace: Marketplace.SHOPEE, price: 45900, originalPrice: 48900, externalId: 'shopee-iphone15', shopName: 'Apple Official Store' },
@@ -124,7 +115,7 @@ async function main() {
       soldCount: 22000,
       isTrending: true,
       isTopSelling: false,
-      imageUrl: 'https://images.unsplash.com/photo-1620916564558-99ef3043f8c2?w=400',
+      imageUrl: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&q=80',
       searchKeywords: 'เซรั่ม วิตามินซี บำรุงผิว ความงาม',
       listings: [
         { marketplace: Marketplace.SHOPEE, price: 299, originalPrice: 590, externalId: 'shopee-serum', shopName: 'Beauty Store' },
@@ -172,7 +163,7 @@ async function main() {
     const { listings, ...productData } = p;
     const product = await prisma.product.upsert({
       where: { slug: p.slug },
-      update: {},
+      update: { imageUrl: productData.imageUrl },
       create: productData,
     });
 

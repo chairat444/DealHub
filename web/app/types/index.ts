@@ -31,7 +31,10 @@ export interface Category {
   id: string
   name: string
   slug: string
+  description?: string
   icon?: string
+  sortOrder?: number
+  isActive?: boolean
   children?: Category[]
   _count?: { products: number }
 }

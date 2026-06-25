@@ -8,36 +8,67 @@
     --shopee-orange-dark: #D73211;
     --shopee-orange-light: #FFF6F4;
     --shopee-bg: #F5F5F5;
+
+    --bg-page: 245 245 245;
+    --bg-surface: 255 255 255;
+    --bg-surface-muted: 249 250 251;
+    --text-primary: 17 24 39;
+    --text-muted: 107 114 128;
+    --border-default: 229 231 235;
+  }
+
+  .dark {
+    --shopee-orange-light: #2a1a16;
+    --shopee-bg: #121212;
+
+    --bg-page: 15 15 15;
+    --bg-surface: 28 28 28;
+    --bg-surface-muted: 38 38 38;
+    --text-primary: 243 244 246;
+    --text-muted: 156 163 175;
+    --border-default: 55 65 81;
+  }
+
+  html {
+    font-size: 112.5%;
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+    @apply bg-page text-content font-sans antialiased text-base leading-relaxed;
     font-family: 'Noto Sans Thai', sans-serif;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-[#EE4D2D] hover:bg-[#D73211] text-white font-medium px-6 py-2.5 rounded-sm transition-colors duration-200;
+    @apply bg-[#EE4D2D] hover:bg-[#D73211] text-white font-medium text-base px-6 py-3 rounded-sm transition-colors duration-200;
   }
 
   .btn-outline {
-    @apply border border-[#EE4D2D] text-[#EE4D2D] hover:bg-[#FFF6F4] font-medium px-6 py-2.5 rounded-sm transition-colors duration-200;
+    @apply border border-[#EE4D2D] text-[#EE4D2D] hover:bg-[#FFF6F4] dark:hover:bg-shopee/10 font-medium text-base px-6 py-3 rounded-sm transition-colors duration-200;
   }
 
   .card {
-    @apply bg-white rounded-sm shadow-sm hover:shadow-md transition-shadow duration-200;
+    @apply bg-surface rounded-sm shadow-sm hover:shadow-md transition-shadow duration-200 border border-line;
+  }
+
+  .section-card {
+    @apply bg-surface rounded-xl border border-line shadow-sm;
   }
 
   .input-field {
-    @apply w-full px-4 py-2.5 border border-gray-200 rounded-sm focus:outline-none focus:border-[#EE4D2D] focus:ring-1 focus:ring-[#EE4D2D] transition-colors;
+    @apply w-full px-4 py-3 text-base border border-line rounded-sm bg-surface text-content focus:outline-none focus:border-[#EE4D2D] focus:ring-1 focus:ring-[#EE4D2D] transition-colors;
   }
 
   .badge-shopee {
-    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#EE4D2D] text-white;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded text-sm font-medium bg-[#EE4D2D] text-white;
   }
 
-  .marketplace-shopee { @apply bg-orange-100 text-orange-700; }
-  .marketplace-lazada { @apply bg-blue-100 text-blue-700; }
-  .marketplace-tiktok { @apply bg-gray-900 text-white; }
+  .marketplace-shopee { @apply bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300; }
+  .marketplace-lazada { @apply bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300; }
+  .marketplace-tiktok { @apply bg-gray-900 text-white dark:bg-gray-700 dark:text-gray-100; }
+
+  .page-container {
+    @apply max-w-7xl mx-auto px-4;
+  }
 }

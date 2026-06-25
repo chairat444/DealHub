@@ -1,98 +1,104 @@
 <template>
-  <header class="bg-[#EE4D2D] sticky top-0 z-50 shadow-md">
-    <div class="container mx-auto px-4">
-      <!-- Top bar -->
-      <div class="flex items-center justify-between py-3 gap-4">
-        <!-- Logo -->
-        <NuxtLink to="/" class="flex items-center gap-2 shrink-0">
-          <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-            <span class="text-[#EE4D2D] font-bold text-lg">D</span>
-          </div>
-          <span class="text-white font-bold text-xl hidden sm:block">DealHub</span>
+  <header class="sticky top-0 z-50 bg-shopee">
+    <div class="page-container">
+      <div class="flex items-center gap-3 h-14 md:h-[60px]">
+        <NuxtLink to="/" class="text-white text-xl font-bold tracking-tight shrink-0 mr-1">
+          Deal<span class="text-[#FFD600]">Hub</span>
         </NuxtLink>
 
-        <!-- Search -->
-        <form @submit.prevent="handleSearch" class="flex-1 max-w-2xl">
-          <div class="flex">
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="ค้นหาสินค้า แบรนด์ หรือหมวดหมู่..."
-              class="flex-1 px-4 py-2.5 rounded-l-sm text-sm focus:outline-none"
-            />
-            <button type="submit" class="bg-[#D73211] hover:bg-[#c02a0d] px-6 rounded-r-sm transition-colors">
-              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
-          </div>
+        <form @submit.prevent="handleSearch" class="flex-1 flex items-center bg-white dark:bg-surface rounded-lg overflow-hidden h-10 md:h-11 max-w-3xl border border-transparent dark:border-line">
+          <Search class="w-5 h-5 text-gray-400 ml-3 shrink-0" />
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="ค้นหาสินค้าจาก Shopee · Lazada · TikTok"
+            class="flex-1 border-none outline-none px-2 text-base text-gray-800 dark:text-content bg-transparent min-w-0"
+          />
+          <button type="submit" class="bg-[#FFD600] hover:bg-[#f5cc00] h-full px-4 flex items-center text-shopee transition-colors">
+            <ArrowRight class="w-5 h-5" />
+          </button>
         </form>
 
-        <!-- Actions -->
-        <div class="flex items-center gap-3 shrink-0">
-          <NuxtLink to="/compare" class="text-white hover:text-orange-100 relative p-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            <span v-if="compareCount > 0" class="absolute -top-1 -right-1 bg-yellow-400 text-xs text-gray-900 rounded-full w-5 h-5 flex items-center justify-center font-bold">
-              {{ compareCount }}
+        <div class="flex items-center gap-3 sm:gap-4 text-white text-sm shrink-0">
+          <LayoutThemeToggle />
+
+          <NuxtLink to="/notifications" class="nav-act hidden sm:flex">
+            <Bell class="w-5 h-5" />
+            <span>แจ้งเตือน</span>
+          </NuxtLink>
+
+          <NuxtLink to="/wishlist" class="nav-act relative hidden sm:flex">
+            <Heart class="w-5 h-5" />
+            <span>วิชลิสต์</span>
+            <span
+              v-if="wishlistCount > 0"
+              class="absolute -top-1 -right-1.5 bg-[#FFD600] text-shopee rounded-full text-xs font-bold px-1.5 min-w-5 text-center"
+            >
+              {{ wishlistCount }}
             </span>
           </NuxtLink>
 
-          <NuxtLink to="/wishlist" class="text-white hover:text-orange-100 p-2 hidden sm:block">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-          </NuxtLink>
-
           <template v-if="authStore.isLoggedIn">
-            <NuxtLink v-if="authStore.isAdmin" to="/admin" class="text-white text-sm hover:text-orange-100 hidden md:block">
-              แอดมิน
+            <NuxtLink v-if="authStore.isAdmin" to="/admin" class="nav-act hidden sm:flex">
+              <Shield class="w-5 h-5" />
+              <span>แอดมิน</span>
             </NuxtLink>
-            <button @click="authStore.logout(); navigateTo('/')" class="text-white text-sm hover:text-orange-100">
-              {{ authStore.user?.name }}
+            <button type="button" class="nav-act hidden sm:flex" @click="authStore.logout(); navigateTo('/')">
+              <User class="w-5 h-5" />
+              <span class="max-w-[80px] truncate">{{ authStore.user?.name }}</span>
             </button>
           </template>
-          <template v-else>
-            <NuxtLink to="/auth/login" class="text-white text-sm hover:text-orange-100">
-              เข้าสู่ระบบ
-            </NuxtLink>
-            <NuxtLink to="/auth/register" class="bg-white text-[#EE4D2D] text-sm font-medium px-3 py-1.5 rounded-sm hover:bg-orange-50">
-              สมัครสมาชิก
-            </NuxtLink>
-          </template>
+          <NuxtLink v-else to="/auth/login" class="nav-act hidden sm:flex">
+            <User class="w-5 h-5" />
+            <span>เข้าสู่ระบบ</span>
+          </NuxtLink>
         </div>
       </div>
+    </div>
 
-      <!-- Category nav -->
-      <nav class="flex items-center gap-1 pb-2 overflow-x-auto text-sm">
+    <nav class="bg-[#c13515]">
+      <div class="page-container flex items-center h-10 md:h-11 overflow-x-auto gap-0 text-sm">
+        <NuxtLink to="/search?sort=sold" class="subnav-item hot whitespace-nowrap">
+          <Flame class="w-3.5 h-3.5 mr-1 inline" />
+          Flash Sale
+        </NuxtLink>
         <NuxtLink
           v-for="cat in categories"
           :key="cat.slug"
           :to="`/categories/${cat.slug}`"
-          class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-sm whitespace-nowrap transition-colors"
+          class="subnav-item whitespace-nowrap"
         >
-          {{ cat.icon }} {{ cat.name }}
+          {{ cat.name }}
         </NuxtLink>
-      </nav>
-    </div>
+        <NuxtLink to="/search" class="subnav-item ml-auto text-[#FFD600] font-semibold whitespace-nowrap">
+          <LayoutGrid class="w-3.5 h-3.5 mr-1 inline" />
+          ทุกหมวด
+        </NuxtLink>
+      </div>
+    </nav>
   </header>
 </template>
 
 <script setup lang="ts">
+import { ArrowRight, Bell, Flame, Heart, LayoutGrid, Search, Shield, User } from 'lucide-vue-next'
 import type { Category } from '~/types'
 
 const authStore = useAuthStore()
-const compareStore = useCompareStore()
 const router = useRouter()
 const { apiFetch } = useApi()
 
 const searchQuery = ref('')
-const compareCount = computed(() => compareStore.count)
+const wishlistCount = ref(0)
 
 const { data: categories } = await useAsyncData('header-categories', () =>
   apiFetch<Category[]>('/categories').catch(() => []),
 )
+
+if (import.meta.client && authStore.isLoggedIn) {
+  apiFetch<unknown[]>('/wishlist')
+    .then((items) => { wishlistCount.value = items.length })
+    .catch(() => {})
+}
 
 function handleSearch() {
   if (searchQuery.value.trim()) {
@@ -100,3 +106,15 @@ function handleSearch() {
   }
 }
 </script>
+
+<style scoped>
+.nav-act {
+  @apply flex flex-col items-center gap-1 text-sm opacity-90 hover:opacity-100 transition-opacity;
+}
+.subnav-item {
+  @apply text-white px-3 h-full flex items-center opacity-85 hover:opacity-100 hover:bg-white/10 transition-colors;
+}
+.subnav-item.hot {
+  @apply text-[#FFD600] font-semibold opacity-100;
+}
+</style>

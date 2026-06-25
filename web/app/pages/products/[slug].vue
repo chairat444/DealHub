@@ -1,45 +1,47 @@
 <template>
   <div class="container mx-auto px-4 py-6">
-    <div v-if="pending" class="text-center py-20 text-gray-400">กำลังโหลด...</div>
+    <div v-if="pending" class="text-center py-20 text-content-muted">กำลังโหลด...</div>
     <div v-else-if="!product" class="text-center py-20">
-      <p class="text-gray-500">ไม่พบสินค้า</p>
+      <p class="text-content-muted">ไม่พบสินค้า</p>
     </div>
     <template v-else>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Image -->
-        <div class="card p-4">
-          <img
-            :src="product.imageUrl || '/placeholder-product.svg'"
+        <div class="card p-4 overflow-hidden">
+          <ProductImage
+            :src="product.imageUrl"
             :alt="product.name"
-            class="w-full aspect-square object-cover rounded-sm"
+            :category-slug="product.category?.slug"
+            container-class="w-full aspect-square"
+            img-class="w-full h-full object-cover rounded-sm"
           />
         </div>
 
         <!-- Info -->
         <div>
-          <h1 class="text-2xl font-bold text-gray-800 mb-2">{{ product.name }}</h1>
-          <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
+          <h1 class="text-2xl md:text-3xl font-bold text-content mb-2">{{ product.name }}</h1>
+          <div class="flex items-center gap-4 text-base text-content-muted mb-4">
             <span v-if="product.rating">⭐ {{ product.rating }} ({{ product.reviewCount }} รีวิว)</span>
             <span>ขายแล้ว {{ product.soldCount?.toLocaleString() }}</span>
             <span v-if="product.brand">แบรนด์: {{ product.brand }}</span>
           </div>
 
           <!-- Price comparison -->
-          <div class="bg-[#FFF6F4] border border-orange-100 rounded-sm p-4 mb-6">
-            <h2 class="font-bold text-gray-800 mb-3">💰 เปรียบเทียบราคา</h2>
+          <div class="bg-shopee-light/50 dark:bg-shopee/10 border border-orange-100 dark:border-shopee/30 rounded-sm p-4 mb-6">
+            <h2 class="font-bold text-content mb-3">💰 เปรียบเทียบราคา</h2>
             <div class="space-y-3">
               <div
                 v-for="listing in product.listings"
                 :key="listing.id"
-                class="flex items-center justify-between bg-white p-3 rounded-sm border"
+                class="flex items-center justify-between bg-surface p-3 rounded-sm border border-line"
               >
                 <div class="flex items-center gap-3">
                   <span :class="['text-xs px-2 py-1 rounded font-medium', marketplaceColor(listing.marketplace)]">
                     {{ marketplaceLabel(listing.marketplace) }}
                   </span>
                   <div>
-                    <div class="text-[#EE4D2D] font-bold text-xl">{{ formatPrice(listing.price) }}</div>
-                    <div v-if="listing.originalPrice" class="text-xs text-gray-400 line-through">
+                    <div class="text-[#EE4D2D] font-bold text-2xl">{{ formatPrice(listing.price) }}</div>
+                    <div v-if="listing.originalPrice" class="text-sm text-content-muted line-through">
                       {{ formatPrice(listing.originalPrice) }}
                     </div>
                   </div>
@@ -66,15 +68,15 @@
 
           <!-- AI Review Summary -->
           <div v-if="aiSummary" class="card p-4 mb-6">
-            <h2 class="font-bold text-gray-800 mb-2">🤖 สรุปรีวิวด้วย AI</h2>
-            <p class="text-sm text-gray-600 whitespace-pre-line">{{ aiSummary }}</p>
+            <h2 class="font-bold text-content mb-2">🤖 สรุปรีวิวด้วย AI</h2>
+            <p class="text-sm text-content-muted whitespace-pre-line">{{ aiSummary }}</p>
           </div>
         </div>
       </div>
 
       <!-- Price History -->
       <section v-if="product.priceHistory?.length" class="mt-10">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">📈 ประวัติราคา (30 วันล่าสุด)</h2>
+        <h2 class="text-xl font-bold text-content mb-4">📈 ประวัติราคา (30 วันล่าสุด)</h2>
         <div class="card p-6">
           <div class="flex items-end gap-1 h-40">
             <div
@@ -131,10 +133,22 @@ const { data: aiSummary } = await useAsyncData(
   { watch: [() => product.value?.id] },
 )
 
-useSeoMeta({
+const config = useRuntimeConfig()
+
+useSiteSeo({
   title: () => product.value?.name || 'สินค้า',
-  description: () => product.value?.description || '',
-  ogImage: () => product.value?.imageUrl,
+  description: () => {
+    const p = product.value
+    if (!p) return SITE.defaultDescription
+    const price = p.lowestPrice ? ` ราคาเริ่มต้น ${p.lowestPrice.toLocaleString('th-TH')} บาท` : ''
+    return `เปรียบเทียบราคา ${p.name} จาก Shopee, Lazada, TikTok Shop${price} ดูประวัติราคาและรีวิวบน DealHub TH`
+  },
+  image: () => product.value?.imageUrl,
+  path: () => `/products/${slug}`,
+  jsonLd: () =>
+    product.value
+      ? buildProductJsonLd(product.value, config.public.siteUrl as string)
+      : undefined,
 })
 
 const maxPrice = computed(() => {

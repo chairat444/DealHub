@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../infrastructure/database/prisma.service';
 import { CacheService } from '../../../infrastructure/cache/cache.service';
+import { UpdateCategoryDto } from '../presentation/dto/update-category.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -35,7 +36,33 @@ export class CategoriesService {
       include: {
         children: { where: { isActive: true } },
         parent: true,
+        _count: { select: { products: true } },
       },
     });
+  }
+
+  async findAllForAdmin() {
+    return this.prisma.category.findMany({
+      orderBy: { sortOrder: 'asc' },
+      include: {
+        _count: { select: { products: true } },
+      },
+    });
+  }
+
+  async update(id: string, dto: UpdateCategoryDto) {
+    const existing = await this.prisma.category.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException('ไม่พบหมวดหมู่');
+
+    const updated = await this.prisma.category.update({
+      where: { id },
+      data: dto,
+      include: {
+        _count: { select: { products: true } },
+      },
+    });
+
+    await this.cache.del('categories:all');
+    return updated;
   }
 }

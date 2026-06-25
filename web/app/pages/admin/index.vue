@@ -1,12 +1,18 @@
 <template>
   <div class="container mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">⚙️ แดชบอร์ดผู้ดูแลระบบ</h1>
+    <h1 class="text-2xl font-bold text-content mb-6">⚙️ แดชบอร์ดผู้ดูแลระบบ</h1>
 
     <div v-if="!authStore.isAdmin" class="text-center py-20 text-red-500">
       ไม่มีสิทธิ์เข้าถึง
     </div>
 
     <template v-else-if="dashboard">
+      <div class="flex flex-wrap gap-3 mb-6">
+        <NuxtLink to="/admin/categories" class="btn-outline text-sm px-4 py-2">
+          จัดการหมวดหมู่ / คำโปรย SEO
+        </NuxtLink>
+      </div>
+
       <!-- Stats -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div class="card p-6 text-center">
@@ -67,5 +73,5 @@ const { data: dashboard } = await useAsyncData(
     : null,
 )
 
-useSeoMeta({ title: 'แอดมิน - DealHub TH' })
+useSiteSeo({ title: 'แอดมิน', noindex: true })
 </script>
