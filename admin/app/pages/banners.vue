@@ -1,26 +1,56 @@
 <template>
-  <div class="p-6 max-w-4xl">
-    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
-      <div>
-        <h1 class="text-2xl font-bold text-content">จัดการแบนเนอร์หน้าแรก</h1>
-        <p class="text-content-muted text-sm mt-1">
-          อัปโหลดรูปสัดส่วนกว้าง ~3:1 (แนะนำ 1200×400 px) — แสดงใน carousel หลัง slide โปรโมชันหลัก
-        </p>
-      </div>
+  <div class="p-6 max-w-5xl">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-content">จัดการโฆษณา / แบนเนอร์</h1>
+      <p class="text-content-muted text-sm mt-1">
+        กำหนดตำแหน่ง รูปภาพ ช่วงเวลาแสดง และดูสถิติ impression / click
+      </p>
+    </div>
+
+    <!-- Placement tabs -->
+    <div class="flex flex-wrap gap-2 mb-6 border-b border-line pb-4">
+      <button
+        v-for="p in AD_PLACEMENTS"
+        :key="p.id"
+        type="button"
+        class="text-sm px-3 py-1.5 rounded-sm border transition-colors"
+        :class="activePlacement === p.id
+          ? 'bg-[#FFF6F4] border-shopee text-shopee font-medium'
+          : 'border-line text-content-muted hover:border-shopee/40'"
+        @click="setPlacement(p.id)"
+      >
+        {{ p.label }}
+      </button>
+    </div>
+
+    <div class="card p-4 mb-6 bg-[#FFF6F4]/50 border-dashed">
+      <p class="text-sm font-medium text-content">{{ placementMeta.page }}</p>
+      <p class="text-xs text-content-muted mt-1">
+        ขนาดแนะนำ: {{ placementMeta.sizeHint }}
+        <span v-if="placementMeta.showAdBadge"> · แสดงป้าย «โฆษณา»</span>
+      </p>
+    </div>
+
+    <div class="flex justify-end mb-4">
       <button
         type="button"
         class="btn-primary text-sm px-5 py-2"
         :disabled="creating"
         @click="addBanner"
       >
-        {{ creating ? 'กำลังสร้าง...' : '+ เพิ่มแบนเนอร์' }}
+        {{ creating ? 'กำลังสร้าง...' : `+ เพิ่มโฆษณา (${placementMeta.label})` }}
       </button>
     </div>
 
     <div v-if="pending" class="text-center py-20 text-content-muted">กำลังโหลด...</div>
 
+    <div v-else-if="loadError" class="card p-10 text-center">
+      <p class="text-red-600 mb-4">{{ loadError }}</p>
+      <button type="button" class="btn-primary text-sm px-5 py-2" @click="refresh()">ลองใหม่</button>
+    </div>
+
     <div v-else-if="!banners?.length" class="card p-10 text-center text-content-muted">
-      ยังไม่มีแบนเนอร์ — กด «เพิ่มแบนเนอร์» เพื่อเริ่มต้น
+      ยังไม่มีโฆษณาในตำแหน่งนี้
     </div>
 
     <div v-else class="space-y-6">
@@ -29,11 +59,15 @@
         :key="banner.id"
         class="card overflow-hidden"
       >
-        <div class="aspect-[3/1] bg-surface-muted relative">
+        <div
+          class="relative w-full overflow-hidden rounded-t-xl bg-surface-muted"
+          :class="placementMeta.aspect"
+          :style="{ aspectRatio: placementMeta.aspectRatio }"
+        >
           <img
             :src="resolveBannerImageUrl(banner.imageUrl)"
-            :alt="banner.altText || banner.title || 'แบนเนอร์'"
-            class="w-full h-full object-cover"
+            :alt="banner.altText || banner.title || 'โฆษณา'"
+            class="absolute inset-0 h-full w-full object-cover object-center"
           >
           <span
             class="absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded"
@@ -41,65 +75,60 @@
           >
             {{ banner.isActive ? 'เปิดใช้งาน' : 'ปิดอยู่' }}
           </span>
+          <span class="absolute top-3 right-3 text-xs px-2 py-1 rounded bg-black/55 text-white">
+            👁 {{ banner.impressions.toLocaleString() }} · 🖱 {{ banner.clicks.toLocaleString() }}
+          </span>
         </div>
 
         <div class="p-5 space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <h2 class="font-bold text-content text-lg">
-              {{ banner.title || `แบนเนอร์ #${banner.sortOrder + 1}` }}
+              {{ banner.title || `โฆษณา #${banner.sortOrder + 1}` }}
             </h2>
             <label class="inline-flex items-center gap-2 text-sm text-content cursor-pointer">
               <input
                 v-model="forms[banner.id].isActive"
                 type="checkbox"
-                class="rounded border-line text-shopee focus:ring-shopee/30"
+                class="rounded border-line text-shopee"
               >
-              แสดงบนหน้าแรก
+              แสดงบนเว็บ
             </label>
           </div>
 
           <div class="grid sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-content-muted mb-1">ชื่อ (ภายใน)</label>
-              <input
-                v-model="forms[banner.id].title"
-                type="text"
-                maxlength="120"
-                class="input-field"
-                placeholder="DealHub TH"
-              >
+              <label class="block text-sm font-medium text-content-muted mb-1">ชื่อแคมเปญ</label>
+              <input v-model="forms[banner.id].title" type="text" maxlength="120" class="input-field">
             </div>
             <div>
+              <label class="block text-sm font-medium text-content-muted mb-1">ผู้ลงโฆษณา</label>
+              <input v-model="forms[banner.id].sponsorName" type="text" maxlength="120" class="input-field" placeholder="Shopee, Brand X">
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-3 gap-4">
+            <div>
               <label class="block text-sm font-medium text-content-muted mb-1">ลำดับ</label>
-              <input
-                v-model.number="forms[banner.id].sortOrder"
-                type="number"
-                min="0"
-                class="input-field"
-              >
+              <input v-model.number="forms[banner.id].sortOrder" type="number" min="0" class="input-field">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-content-muted mb-1">เริ่มแสดง</label>
+              <input v-model="forms[banner.id].startsAt" type="datetime-local" class="input-field">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-content-muted mb-1">สิ้นสุด</label>
+              <input v-model="forms[banner.id].endsAt" type="datetime-local" class="input-field">
             </div>
           </div>
 
           <div>
             <label class="block text-sm font-medium text-content-muted mb-1">ลิงก์เมื่อคลิก</label>
-            <input
-              v-model="forms[banner.id].linkUrl"
-              type="text"
-              maxlength="500"
-              class="input-field"
-              placeholder="/search"
-            >
+            <input v-model="forms[banner.id].linkUrl" type="text" maxlength="500" class="input-field" placeholder="/search">
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-content-muted mb-1">ข้อความ alt (SEO / accessibility)</label>
-            <input
-              v-model="forms[banner.id].altText"
-              type="text"
-              maxlength="200"
-              class="input-field"
-              placeholder="DealHub TH — เทียบราคา Shopee Lazada TikTok Shop"
-            >
+            <label class="block text-sm font-medium text-content-muted mb-1">ข้อความ alt</label>
+            <input v-model="forms[banner.id].altText" type="text" maxlength="200" class="input-field">
           </div>
 
           <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-line">
@@ -117,7 +146,7 @@
                 :disabled="uploading[banner.id]"
                 @click="triggerUpload(banner.id)"
               >
-                {{ uploading[banner.id] ? 'กำลังอัปโหลด...' : 'อัปโหลดรูปใหม่' }}
+                {{ uploading[banner.id] ? 'กำลังอัปโหลด...' : 'อัปโหลดรูป' }}
               </button>
               <span v-if="uploadError[banner.id]" class="text-sm text-red-600">{{ uploadError[banner.id] }}</span>
               <span v-else-if="uploaded[banner.id]" class="text-sm text-green-600">อัปโหลดแล้ว ✓</span>
@@ -126,11 +155,11 @@
             <div class="flex items-center gap-2">
               <button
                 type="button"
-                class="text-sm px-4 py-2 text-red-600 hover:bg-red-50 rounded-sm transition-colors"
+                class="text-sm px-4 py-2 text-red-600 hover:bg-red-50 rounded-sm"
                 :disabled="deleting[banner.id]"
                 @click="remove(banner.id)"
               >
-                {{ deleting[banner.id] ? 'กำลังลบ...' : 'ลบ' }}
+                ลบ
               </button>
               <button
                 type="button"
@@ -142,8 +171,6 @@
               </button>
             </div>
           </div>
-
-          <p v-if="saved[banner.id]" class="text-xs text-green-600 text-right">บันทึกแล้ว ✓</p>
         </div>
       </article>
     </div>
@@ -151,7 +178,11 @@
 </template>
 
 <script setup lang="ts">
+import { AD_PLACEMENTS, getPlacementMeta, type AdPlacement } from '~/constants/ad-placements'
 import type { AdminBanner, BannerForm } from '~/types/banner'
+
+const route = useRoute()
+const router = useRouter()
 
 const {
   fetchAdminBanners,
@@ -162,9 +193,19 @@ const {
   resolveBannerImageUrl,
 } = useBanners()
 
+const activePlacement = computed<AdPlacement>(() => {
+  const q = route.query.placement as string
+  return AD_PLACEMENTS.some((p) => p.id === q) ? (q as AdPlacement) : 'HERO'
+})
+
+const placementMeta = computed(() => getPlacementMeta(activePlacement.value))
+
+function setPlacement(id: AdPlacement) {
+  router.replace({ query: { placement: id } })
+}
+
 const forms = reactive<Record<string, BannerForm>>({})
 const saving = reactive<Record<string, boolean>>({})
-const saved = reactive<Record<string, boolean>>({})
 const uploading = reactive<Record<string, boolean>>({})
 const uploaded = reactive<Record<string, boolean>>({})
 const uploadError = reactive<Record<string, string>>({})
@@ -172,41 +213,44 @@ const deleting = reactive<Record<string, boolean>>({})
 const fileInputs = reactive<Record<string, HTMLInputElement | null>>({})
 const creating = ref(false)
 
-const { data: banners, pending, refresh } = await useAsyncData(
-  'admin-banners',
-  () => fetchAdminBanners().catch(() => []),
+const { data: banners, pending, refresh, loadError } = useAdminFetch(
+  () => `admin-banners-${activePlacement.value}`,
+  () => fetchAdminBanners(activePlacement.value),
+  [activePlacement],
 )
+
+function toDatetimeLocal(value?: string | null) {
+  if (!value) return ''
+  const d = new Date(value)
+  if (Number.isNaN(d.getTime())) return ''
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
 
 function toForm(banner: AdminBanner): BannerForm {
   return {
     title: banner.title || '',
+    sponsorName: banner.sponsorName || '',
     linkUrl: banner.linkUrl,
     altText: banner.altText || '',
     sortOrder: banner.sortOrder,
     isActive: banner.isActive,
+    startsAt: toDatetimeLocal(banner.startsAt),
+    endsAt: toDatetimeLocal(banner.endsAt),
   }
 }
 
 watch(banners, (items) => {
   if (!items) return
   for (const banner of items) {
-    if (!forms[banner.id]) {
-      forms[banner.id] = toForm(banner)
-    }
+    forms[banner.id] = toForm(banner)
   }
 }, { immediate: true })
 
 function isDirty(banner: AdminBanner) {
   const form = forms[banner.id]
   if (!form) return false
-  const original = toForm(banner)
-  return (
-    form.title !== original.title
-    || form.linkUrl !== original.linkUrl
-    || form.altText !== original.altText
-    || form.sortOrder !== original.sortOrder
-    || form.isActive !== original.isActive
-  )
+  return JSON.stringify(form) !== JSON.stringify(toForm(banner))
 }
 
 function setFileInput(id: string, el: unknown) {
@@ -221,16 +265,13 @@ async function onFileSelected(id: string, event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
   if (!file) return
-
   if (file.size > 3 * 1024 * 1024) {
     uploadError[id] = 'ไฟล์ใหญ่เกิน 3MB'
     input.value = ''
     return
   }
-
   uploading[id] = true
   uploadError[id] = ''
-  uploaded[id] = false
   try {
     await uploadBannerImage(id, file)
     uploaded[id] = true
@@ -244,30 +285,36 @@ async function onFileSelected(id: string, event: Event) {
   }
 }
 
+function toIsoOrUndefined(value: string) {
+  if (!value) return undefined
+  const d = new Date(value)
+  return Number.isNaN(d.getTime()) ? undefined : d.toISOString()
+}
+
 async function save(id: string) {
   saving[id] = true
-  saved[id] = false
   try {
     const form = forms[id]
     await updateBanner(id, {
       title: form.title || undefined,
+      sponsorName: form.sponsorName || undefined,
       linkUrl: form.linkUrl,
       altText: form.altText || undefined,
       sortOrder: form.sortOrder,
       isActive: form.isActive,
+      startsAt: toIsoOrUndefined(form.startsAt),
+      endsAt: toIsoOrUndefined(form.endsAt),
     })
-    saved[id] = true
     await refresh()
-    setTimeout(() => { saved[id] = false }, 3000)
   } catch {
-    alert('บันทึกไม่สำเร็จ กรุณาลองใหม่')
+    alert('บันทึกไม่สำเร็จ')
   } finally {
     saving[id] = false
   }
 }
 
 async function remove(id: string) {
-  if (!confirm('ลบแบนเนอร์นี้?')) return
+  if (!confirm('ลบโฆษณานี้?')) return
   deleting[id] = true
   try {
     await deleteBanner(id)
@@ -285,8 +332,9 @@ async function addBanner() {
   try {
     const nextOrder = banners.value?.length ?? 0
     await createBanner({
-      title: `แบนเนอร์ ${nextOrder + 1}`,
-      imageUrl: '/hero-banner.png',
+      placement: activePlacement.value,
+      title: `โฆษณา ${placementMeta.value.label}`,
+      imageUrl: '/hero-banner.svg',
       linkUrl: '/search',
       altText: 'DealHub TH',
       sortOrder: nextOrder,
@@ -294,11 +342,11 @@ async function addBanner() {
     })
     await refresh()
   } catch {
-    alert('สร้างแบนเนอร์ไม่สำเร็จ')
+    alert('สร้างไม่สำเร็จ')
   } finally {
     creating.value = false
   }
 }
 
-usePageTitle('จัดการแบนเนอร์')
+usePageTitle('จัดการโฆษณา')
 </script>

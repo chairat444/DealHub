@@ -6,7 +6,16 @@ export default {
     './app/layouts/**/*.vue',
     './app/pages/**/*.vue',
     './app/plugins/**/*.{js,ts}',
+    './app/constants/**/*.{js,ts}',
     './app/app.vue',
+  ],
+  safelist: [
+    'aspect-[3/1]',
+    'aspect-[4/1]',
+    'aspect-[5/1]',
+    'aspect-[6/1]',
+    'sm:aspect-[5/1]',
+    'sm:aspect-[6/1]',
   ],
   theme: {
     extend: {

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="300" viewBox="0 0 900 300" role="img" aria-label="Shop TikTok Shop">
+  <defs>
+    <linearGradient id="bg-product" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#010101"/>
+      <stop offset="50%" stop-color="#121212"/>
+      <stop offset="100%" stop-color="#1a3030"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="300" fill="url(#bg-product)"/>
+  <text x="40" y="110" fill="#ffffff" font-family="Arial, sans-serif" font-size="38" font-weight="700">Shop on TikTok Shop</text>
+  <text x="40" y="155" fill="#aaaaaa" font-family="Arial, sans-serif" font-size="22">Live deals · Fast delivery</text>
+  <rect x="40" y="185" width="200" height="44" rx="22" fill="#FE2C55"/>
+  <text x="72" y="215" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="700">Browse deals</text>
+  <circle cx="780" cy="150" r="70" fill="none" stroke="#25F4EE" stroke-width="3" opacity="0.5"/>
+  <text x="752" y="160" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="700">TT</text>
+</svg>

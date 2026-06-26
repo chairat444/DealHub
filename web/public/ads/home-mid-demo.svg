@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="240" viewBox="0 0 1200 240" role="img" aria-label="Flash Sale Shopee">
+  <defs>
+    <linearGradient id="bg-home-mid" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6633"/>
+      <stop offset="100%" stop-color="#EE4D2D"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="240" fill="url(#bg-home-mid)"/>
+  <circle cx="1050" cy="40" r="80" fill="#ffffff" opacity="0.08"/>
+  <text x="48" y="100" fill="#ffffff" font-family="Arial, sans-serif" font-size="48" font-weight="700">Flash Sale</text>
+  <text x="48" y="145" fill="#FFE8E0" font-family="Arial, sans-serif" font-size="26">Up to 70% off on Shopee today</text>
+  <rect x="48" y="168" width="200" height="48" rx="8" fill="#FFD600"/>
+  <text x="88" y="200" fill="#C13515" font-family="Arial, sans-serif" font-size="22" font-weight="700">Shop now</text>
+  <text x="1020" y="210" fill="#ffffff" font-family="Arial, sans-serif" font-size="32" font-weight="700">Shopee</text>
+</svg>

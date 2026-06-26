@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="240" viewBox="0 0 1200 240" role="img" aria-label="Shopee Flash Sale">
+  <defs>
+    <linearGradient id="shopee-bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF6633"/>
+      <stop offset="100%" stop-color="#EE4D2D"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="240" fill="url(#shopee-bg)"/>
+  <circle cx="1040" cy="120" r="100" fill="#fff" opacity="0.07"/>
+  <rect x="40" y="36" width="130" height="32" rx="6" fill="#FFD600"/>
+  <text x="56" y="58" fill="#C13515" font-family="Arial,sans-serif" font-size="16" font-weight="700">FLASH SALE</text>
+  <text x="40" y="118" fill="#ffffff" font-family="Arial,sans-serif" font-size="44" font-weight="700">Up to 70% OFF</text>
+  <text x="40" y="158" fill="rgba(255,255,255,0.9)" font-family="Arial,sans-serif" font-size="24">Month-end deals on Shopee — limited time</text>
+  <rect x="40" y="176" width="168" height="44" rx="8" fill="#fff"/>
+  <text x="68" y="205" fill="#EE4D2D" font-family="Arial,sans-serif" font-size="20" font-weight="700">Shop now</text>
+  <text x="1140" y="200" fill="#ffffff" font-family="Arial,sans-serif" font-size="36" font-weight="700" text-anchor="end">Shopee</text>
+</svg>

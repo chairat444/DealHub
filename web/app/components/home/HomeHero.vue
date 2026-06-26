@@ -1,11 +1,11 @@
 <template>
   <section class="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-3 mb-2.5">
     <!-- Hero carousel -->
-    <div class="hero-banner rounded-xl min-h-[260px] lg:min-h-[300px] relative overflow-hidden">
+    <div class="hero-banner rounded-xl min-h-[220px] sm:min-h-[260px] lg:min-h-[300px] relative overflow-hidden shadow-sm">
       <!-- Slide 1: โปรโมชัน -->
       <div
-        class="absolute inset-0 flex flex-col justify-end p-8 lg:p-10 transition-opacity duration-500"
-        :class="activeSlide === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'"
+        v-show="activeSlide === 0"
+        class="absolute inset-0 flex flex-col justify-end p-8 lg:p-10"
       >
         <div class="hero-banner-accent absolute right-0 top-0 bottom-0 w-[55%] [clip-path:polygon(20%_0,100%_0,100%_100%,0%_100%)]" />
 
@@ -31,17 +31,18 @@
       <!-- Image slides from API -->
       <NuxtLink
         v-for="(banner, index) in imageSlides"
+        v-show="activeSlide === index + 1"
         :key="banner.id"
         :to="banner.linkUrl"
-        class="absolute inset-0 block transition-opacity duration-500"
-        :class="activeSlide === index + 1 ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'"
+        class="absolute inset-0 block"
         :aria-label="banner.altText || banner.title || 'แบนเนอร์โปรโมชัน'"
       >
         <img
           :src="resolveBannerImageUrl(banner.imageUrl)"
           :alt="banner.altText || banner.title || 'DealHub TH'"
-          class="w-full h-full object-cover object-center"
-          loading="lazy"
+          class="h-full w-full object-cover object-center"
+          loading="eager"
+          decoding="async"
         >
       </NuxtLink>
 
@@ -130,22 +131,29 @@ defineProps<{
 const { fetchPosts } = useBoard()
 const { fetchHeroBanners, resolveBannerImageUrl } = useBanners()
 
+const heroBanners = useState<Banner[]>('hero-banners', () => [])
+
 const { data: boardHot } = await useAsyncData('hero-board-hot', () =>
   fetchPosts({ sort: 'hot', limit: 2 }).then((r) => r.items[1] ?? r.items[0] ?? null).catch(() => null),
 )
 
-const { data: heroBanners } = await useAsyncData('hero-banners', fetchHeroBanners)
+async function loadHeroBanners() {
+  const data = await fetchHeroBanners()
+  if (data.length > 0) {
+    heroBanners.value = data
+  }
+}
 
 const fallbackBanner: Banner = {
   id: 'fallback',
-  imageUrl: '/hero-banner.png',
+  imageUrl: '/hero-banner.svg',
   linkUrl: '/search',
   altText: 'DealHub TH — เทียบราคา Shopee Lazada TikTok Shop',
   sortOrder: 0,
 }
 
 const imageSlides = computed(() => {
-  const banners = heroBanners.value ?? []
+  const banners = heroBanners.value
   return banners.length > 0 ? banners : [fallbackBanner]
 })
 
@@ -157,11 +165,22 @@ const activeSlide = ref(0)
 
 let slideTimer: ReturnType<typeof setInterval> | undefined
 
-onMounted(() => {
+function startSlideTimer() {
+  if (slideTimer) clearInterval(slideTimer)
   if (slideCount.value <= 1) return
   slideTimer = setInterval(() => {
     activeSlide.value = (activeSlide.value + 1) % slideCount.value
   }, 6000)
+}
+
+watch(slideCount, () => {
+  activeSlide.value = 0
+  startSlideTimer()
+})
+
+onMounted(() => {
+  loadHeroBanners()
+  startSlideTimer()
 })
 
 onUnmounted(() => {

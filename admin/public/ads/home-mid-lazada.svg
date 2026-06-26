@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="240" viewBox="0 0 1200 240" role="img" aria-label="Lazada deals">
+  <defs>
+    <linearGradient id="lazada-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A53F0"/>
+      <stop offset="50%" stop-color="#0F146D"/>
+      <stop offset="100%" stop-color="#1E0A5C"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="240" fill="url(#lazada-bg)"/>
+  <circle cx="1000" cy="120" r="110" fill="#fff" opacity="0.06"/>
+  <rect x="40" y="36" width="120" height="32" rx="6" fill="#FF6633"/>
+  <text x="56" y="58" fill="#fff" font-family="Arial,sans-serif" font-size="16" font-weight="700">HOT DEAL</text>
+  <text x="40" y="118" fill="#ffffff" font-family="Arial,sans-serif" font-size="44" font-weight="700">Lazada 11.11 Warm Up</text>
+  <text x="40" y="158" fill="rgba(255,255,255,0.88)" font-family="Arial,sans-serif" font-size="24">Coupons + free shipping nationwide</text>
+  <rect x="40" y="176" width="188" height="44" rx="8" fill="#FF6633"/>
+  <text x="68" y="205" fill="#fff" font-family="Arial,sans-serif" font-size="20" font-weight="700">View Lazada deals</text>
+  <text x="1140" y="200" fill="#ffffff" font-family="Arial,sans-serif" font-size="34" font-weight="700" text-anchor="end">Lazada</text>
+</svg>

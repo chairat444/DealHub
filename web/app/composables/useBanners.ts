@@ -1,3 +1,4 @@
+import type { AdPlacement } from '~/constants/ad-placements'
 import type { Banner } from '~/types/banner'
 
 export function useBanners() {
@@ -13,13 +14,36 @@ export function useBanners() {
     return imageUrl
   }
 
-  async function fetchHeroBanners() {
+  async function fetchBanners(placement: AdPlacement) {
     try {
-      return await apiFetch<Banner[]>('/banners?placement=HERO')
+      return await apiFetch<Banner[]>(`/banners?placement=${placement}`)
     } catch {
       return []
     }
   }
 
-  return { fetchHeroBanners, resolveBannerImageUrl }
+  async function fetchHeroBanners() {
+    return fetchBanners('HERO')
+  }
+
+  function trackImpression(bannerId: string) {
+    if (!import.meta.client) return
+    const key = `ad-imp-${bannerId}`
+    if (sessionStorage.getItem(key)) return
+    sessionStorage.setItem(key, '1')
+    apiFetch(`/banners/${bannerId}/impression`, { method: 'POST' }).catch(() => {})
+  }
+
+  function trackClick(bannerId: string) {
+    if (!import.meta.client) return
+    apiFetch(`/banners/${bannerId}/click`, { method: 'POST' }).catch(() => {})
+  }
+
+  return {
+    fetchBanners,
+    fetchHeroBanners,
+    resolveBannerImageUrl,
+    trackImpression,
+    trackClick,
+  }
 }

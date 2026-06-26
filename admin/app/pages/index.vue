@@ -4,6 +4,8 @@
 
     <div v-if="pending" class="text-center py-20 text-content-muted">กำลังโหลด...</div>
 
+    <div v-else-if="loadError" class="card p-10 text-center text-red-600">{{ loadError }}</div>
+
     <template v-else-if="dashboard">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div class="card p-6 text-center">
@@ -65,9 +67,9 @@ interface Dashboard {
   topProducts: { id: string; name: string; slug: string; soldCount: number }[]
 }
 
-const { data: dashboard, pending } = await useAsyncData(
-  'admin-dashboard',
-  () => apiFetch<Dashboard>('/admin/dashboard').catch(() => null),
+const { data: dashboard, pending, loadError } = useAdminFetch(
+  () => 'admin-dashboard',
+  () => apiFetch<Dashboard>('/admin/dashboard'),
 )
 
 usePageTitle('แดชบอร์ด')

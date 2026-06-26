@@ -17,6 +17,8 @@
         :best-sellers="bestSellers"
       />
 
+      <AdSlot placement="HOME_MID" wrapper-class="my-4" />
+
       <div class="deals-board-divider my-4 flex items-center gap-3" aria-hidden="true">
         <div class="flex-1 h-px bg-gradient-to-r from-transparent via-shopee/30 to-transparent" />
         <span class="text-xs font-bold text-shopee dark:text-[rgb(var(--accent-display))] px-2 flex items-center gap-1">
@@ -35,6 +37,7 @@
 </template>
 
 <script setup lang="ts">
+import AdSlot from '~/components/AdSlot.vue'
 import type { Category, Product } from '~/types'
 import { HOME_PRODUCT_LIMITS } from '~/constants/home'
 import { getDiscountPercent } from '~/composables/useProductHelpers'

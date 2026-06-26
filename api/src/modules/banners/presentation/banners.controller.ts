@@ -25,9 +25,23 @@ export class BannersController {
 
   @Public()
   @Get()
-  @ApiOperation({ summary: 'แบนเนอร์ที่เปิดใช้งาน (หน้าแรก)' })
+  @ApiOperation({ summary: 'โฆษณา/แบนเนอร์ที่เปิดใช้งานตามตำแหน่ง' })
   listActive(@Query('placement') placement?: BannerPlacement) {
     return this.bannersService.listActive(placement ?? BannerPlacement.HERO);
+  }
+
+  @Public()
+  @Post(':id/impression')
+  @ApiOperation({ summary: 'บันทึกการแสดงโฆษณา' })
+  recordImpression(@Param('id') id: string) {
+    return this.bannersService.recordImpression(id);
+  }
+
+  @Public()
+  @Post(':id/click')
+  @ApiOperation({ summary: 'บันทึกการคลิกโฆษณา' })
+  recordClick(@Param('id') id: string) {
+    return this.bannersService.recordClick(id);
   }
 }
 

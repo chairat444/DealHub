@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsDateString, IsEnum, IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
 import { BannerPlacement } from '@prisma/client';
 
 export class CreateBannerDto {
@@ -10,6 +10,11 @@ export class CreateBannerDto {
   @IsString()
   @MaxLength(120)
   title?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  sponsorName?: string;
 
   @IsString()
   @MaxLength(500)
@@ -32,6 +37,14 @@ export class CreateBannerDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsDateString()
+  startsAt?: string;
+
+  @IsOptional()
+  @IsDateString()
+  endsAt?: string;
 }
 
 export class UpdateBannerDto {
@@ -43,6 +56,11 @@ export class UpdateBannerDto {
   @IsString()
   @MaxLength(120)
   title?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  sponsorName?: string;
 
   @IsOptional()
   @IsString()
@@ -66,4 +84,12 @@ export class UpdateBannerDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsDateString()
+  startsAt?: string;
+
+  @IsOptional()
+  @IsDateString()
+  endsAt?: string;
 }

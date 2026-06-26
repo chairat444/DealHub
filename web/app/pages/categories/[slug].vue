@@ -32,6 +32,8 @@
       />
     </header>
 
+    <AdSlot placement="CATEGORY_TOP" wrapper-class="mb-6" />
+
     <div v-if="pending" class="text-center py-20 text-content-muted">กำลังโหลด...</div>
     <template v-else>
       <div v-if="results?.items?.length" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -43,6 +45,7 @@
 </template>
 
 <script setup lang="ts">
+import AdSlot from '~/components/AdSlot.vue'
 import type { Category, PaginatedResponse, Product } from '~/types'
 
 const route = useRoute()

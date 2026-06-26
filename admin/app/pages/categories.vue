@@ -7,9 +7,11 @@
 
     <div v-if="pending" class="text-center py-20 text-content-muted">กำลังโหลด...</div>
 
+    <div v-else-if="loadError" class="card p-10 text-center text-red-600 mb-6">{{ loadError }}</div>
+
     <div v-else class="space-y-4">
       <article
-        v-for="cat in categories"
+        v-for="cat in categories || []"
         :key="cat.id"
         class="card p-5"
       >
@@ -74,9 +76,9 @@ const forms = reactive<Record<string, { description: string }>>({})
 const saving = reactive<Record<string, boolean>>({})
 const saved = reactive<Record<string, boolean>>({})
 
-const { data: categories, pending, refresh } = await useAsyncData(
-  'admin-categories',
-  () => apiFetch<Category[]>('/admin/categories').catch(() => []),
+const { data: categories, pending, refresh, loadError } = useAdminFetch(
+  () => 'admin-categories',
+  () => apiFetch<Category[]>('/admin/categories'),
 )
 
 watch(categories, (items) => {

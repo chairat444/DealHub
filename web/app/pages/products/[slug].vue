@@ -71,8 +71,10 @@
             :text="shareText"
             :path="`/products/${slug}`"
             label="แชร์ดีลนี้ให้เพื่อน"
-            class="mb-6"
+            class="mb-4"
           />
+
+          <AdSlot placement="PRODUCT_INLINE" wrapper-class="mb-6" />
 
           <!-- AI Review Summary -->
           <div v-if="aiSummary" class="card p-4 mb-6">
@@ -117,6 +119,7 @@
 </template>
 
 <script setup lang="ts">
+import AdSlot from '~/components/AdSlot.vue'
 import type { Product, ProductListing } from '~/types'
 
 const route = useRoute()

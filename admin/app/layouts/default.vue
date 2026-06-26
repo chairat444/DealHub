@@ -16,7 +16,7 @@
       <nav class="p-2 flex-1 space-y-0.5">
         <NuxtLink to="/" class="nav-link">แดชบอร์ด</NuxtLink>
         <NuxtLink to="/categories" class="nav-link">หมวดหมู่ / SEO</NuxtLink>
-        <NuxtLink to="/banners" class="nav-link">แบนเนอร์หน้าแรก</NuxtLink>
+        <NuxtLink to="/banners" class="nav-link">โฆษณา / แบนเนอร์</NuxtLink>
       </nav>
 
       <div class="p-4 border-t border-line">

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-label="DealHub TH price comparison">
+  <defs>
+    <linearGradient id="hero-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EE4D2D"/>
+      <stop offset="55%" stop-color="#E8451F"/>
+      <stop offset="100%" stop-color="#C13515"/>
+    </linearGradient>
+    <linearGradient id="hero-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFD600" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#FFD600" stop-opacity="0.25"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="url(#hero-bg)"/>
+  <polygon points="680,0 1200,0 1200,400 520,400" fill="url(#hero-accent)"/>
+  <circle cx="1080" cy="80" r="120" fill="#fff" opacity="0.06"/>
+  <circle cx="920" cy="320" r="90" fill="#fff" opacity="0.05"/>
+  <text x="64" y="148" fill="#FFD600" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="2">DEALHUB TH</text>
+  <text x="64" y="210" fill="#ffffff" font-family="Arial,sans-serif" font-size="48" font-weight="700">Compare 3 Marketplaces</text>
+  <text x="64" y="258" fill="rgba(255,255,255,0.88)" font-family="Arial,sans-serif" font-size="26">Shopee · Lazada · TikTok Shop in one place</text>
+  <rect x="64" y="290" width="220" height="52" rx="10" fill="#FFD600"/>
+  <text x="108" y="324" fill="#C13515" font-family="Arial,sans-serif" font-size="22" font-weight="700">Start comparing</text>
+  <g transform="translate(720,130)">
+    <rect x="0" y="0" width="148" height="56" rx="28" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+    <text x="74" y="36" fill="#fff" font-family="Arial,sans-serif" font-size="20" font-weight="600" text-anchor="middle">Shopee</text>
+    <rect x="0" y="76" width="148" height="56" rx="28" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+    <text x="74" y="112" fill="#fff" font-family="Arial,sans-serif" font-size="20" font-weight="600" text-anchor="middle">Lazada</text>
+    <rect x="168" y="38" width="168" height="56" rx="28" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+    <text x="252" y="74" fill="#fff" font-family="Arial,sans-serif" font-size="18" font-weight="600" text-anchor="middle">TikTok Shop</text>
+  </g>
+</svg>

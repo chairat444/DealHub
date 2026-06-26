@@ -1,4 +1,5 @@
-import type { AdminBanner, Banner, BannerForm } from '~/types/banner'
+import type { AdPlacement } from '~/constants/ad-placements'
+import type { AdminBanner, BannerForm } from '~/types/banner'
 
 export function useBanners() {
   const config = useRuntimeConfig()
@@ -6,21 +7,32 @@ export function useBanners() {
 
   function resolveBannerImageUrl(imageUrl: string) {
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl
+
+    const path = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`
+
     if (imageUrl.startsWith('/uploads/')) {
       const origin = (config.public.apiBase as string).replace(/\/api\/v1\/?$/, '')
-      return `${origin}${imageUrl}`
+      return `${origin}${path}`
     }
+
+    // รูป static (/ads, hero-banner) — โหลดจาก origin ปัจจุบัน (admin มี copy ใน public/)
+    if (import.meta.client) {
+      return `${window.location.origin}${path}`
+    }
+
     const siteUrl = (config.public.siteUrl as string).replace(/\/$/, '')
-    return `${siteUrl}${imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`}`
+    return `${siteUrl}${path}`
   }
 
-  const fetchAdminBanners = () => apiFetch<AdminBanner[]>('/admin/banners?placement=HERO')
+  const fetchAdminBanners = (placement?: AdPlacement) =>
+    apiFetch<AdminBanner[]>(
+      placement ? `/admin/banners?placement=${placement}` : '/admin/banners',
+    )
 
-  const createBanner = (body: Partial<BannerForm> & { imageUrl: string }) =>
+  const createBanner = (body: Partial<BannerForm> & { imageUrl: string; placement: AdPlacement }) =>
     apiFetch<AdminBanner>('/admin/banners', {
       method: 'POST',
       body: {
-        placement: 'HERO',
         linkUrl: '/search',
         sortOrder: 0,
         isActive: true,
@@ -28,7 +40,7 @@ export function useBanners() {
       },
     })
 
-  const updateBanner = (id: string, body: Partial<BannerForm>) =>
+  const updateBanner = (id: string, body: Partial<BannerForm> & { placement?: AdPlacement }) =>
     apiFetch<AdminBanner>(`/admin/banners/${id}`, { method: 'PATCH', body })
 
   const deleteBanner = (id: string) =>

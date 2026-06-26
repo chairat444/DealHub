@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-label="Lazada category deals">
+  <defs>
+    <linearGradient id="cat-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F146D"/>
+      <stop offset="60%" stop-color="#1A53F0"/>
+      <stop offset="100%" stop-color="#4B7BFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="300" fill="url(#cat-bg)"/>
+  <polygon points="900,0 1200,0 1200,300 780,300" fill="#fff" opacity="0.05"/>
+  <circle cx="1080" cy="240" r="90" fill="#FF6633" opacity="0.25"/>
+  <text x="56" y="108" fill="#FFD600" font-family="Arial,sans-serif" font-size="20" font-weight="700">IN THIS CATEGORY</text>
+  <text x="56" y="162" fill="#ffffff" font-family="Arial,sans-serif" font-size="46" font-weight="700">Top picks from Lazada</text>
+  <text x="56" y="206" fill="rgba(255,255,255,0.85)" font-family="Arial,sans-serif" font-size="24">Best sellers + exclusive category prices</text>
+  <rect x="56" y="232" width="176" height="44" rx="8" fill="#FF6633"/>
+  <text x="84" y="261" fill="#fff" font-family="Arial,sans-serif" font-size="20" font-weight="700">Browse deals</text>
+</svg>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="300" viewBox="0 0 900 300" role="img" aria-label="TikTok Shop deals">
+  <defs>
+    <linearGradient id="tt-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d0d0d"/>
+      <stop offset="50%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+    <linearGradient id="tt-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#25F4EE" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#FE2C55" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#25F4EE" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="300" fill="url(#tt-bg)"/>
+  <rect width="900" height="300" fill="url(#tt-accent)"/>
+  <circle cx="780" cy="150" r="100" fill="#FE2C55" opacity="0.12"/>
+  <text x="48" y="108" fill="#25F4EE" font-family="Arial,sans-serif" font-size="18" font-weight="700">TRENDING NOW</text>
+  <text x="48" y="158" fill="#ffffff" font-family="Arial,sans-serif" font-size="40" font-weight="700">Shop on TikTok Shop</text>
+  <text x="48" y="200" fill="rgba(255,255,255,0.78)" font-family="Arial,sans-serif" font-size="22">Live deals · fast delivery · trending products</text>
+  <rect x="48" y="224" width="188" height="44" rx="22" fill="#FE2C55"/>
+  <text x="76" y="253" fill="#fff" font-family="Arial,sans-serif" font-size="20" font-weight="700">View TikTok deals</text>
+</svg>

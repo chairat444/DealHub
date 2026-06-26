@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { BannerPlacement } from '@prisma/client';
+import { BannerPlacement, Prisma } from '@prisma/client';
 import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { PrismaService } from '../../../infrastructure/database/prisma.service';
@@ -14,12 +14,21 @@ export class BannersService {
   constructor(private prisma: PrismaService) {}
 
   listActive(placement: BannerPlacement = BannerPlacement.HERO) {
+    const now = new Date();
     return this.prisma.banner.findMany({
-      where: { placement, isActive: true },
+      where: {
+        placement,
+        isActive: true,
+        AND: [
+          { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
+          { OR: [{ endsAt: null }, { endsAt: { gte: now } }] },
+        ],
+      },
       orderBy: { sortOrder: 'asc' },
       select: {
         id: true,
         title: true,
+        sponsorName: true,
         imageUrl: true,
         linkUrl: true,
         altText: true,
@@ -37,21 +46,16 @@ export class BannersService {
 
   async create(dto: CreateBannerDto) {
     return this.prisma.banner.create({
-      data: {
-        placement: dto.placement ?? BannerPlacement.HERO,
-        title: dto.title,
-        imageUrl: dto.imageUrl,
-        linkUrl: dto.linkUrl ?? '/search',
-        altText: dto.altText,
-        sortOrder: dto.sortOrder ?? 0,
-        isActive: dto.isActive ?? true,
-      },
+      data: this.toCreateData(dto),
     });
   }
 
   async update(id: string, dto: UpdateBannerDto) {
     await this.ensureExists(id);
-    return this.prisma.banner.update({ where: { id }, data: dto });
+    return this.prisma.banner.update({
+      where: { id },
+      data: this.toUpdateData(dto),
+    });
   }
 
   async remove(id: string) {
@@ -86,6 +90,58 @@ export class BannersService {
       where: { id },
       data: { imageUrl: `/uploads/banners/${filename}` },
     });
+  }
+
+  async recordImpression(id: string) {
+    await this.ensureExists(id);
+    return this.prisma.banner.update({
+      where: { id },
+      data: { impressions: { increment: 1 } },
+      select: { id: true, impressions: true },
+    });
+  }
+
+  async recordClick(id: string) {
+    await this.ensureExists(id);
+    return this.prisma.banner.update({
+      where: { id },
+      data: { clicks: { increment: 1 } },
+      select: { id: true, clicks: true },
+    });
+  }
+
+  private toCreateData(dto: CreateBannerDto): Prisma.BannerCreateInput {
+    return {
+      placement: dto.placement ?? BannerPlacement.HERO,
+      title: dto.title,
+      sponsorName: dto.sponsorName,
+      imageUrl: dto.imageUrl,
+      linkUrl: dto.linkUrl ?? '/search',
+      altText: dto.altText,
+      sortOrder: dto.sortOrder ?? 0,
+      isActive: dto.isActive ?? true,
+      startsAt: dto.startsAt ? new Date(dto.startsAt) : undefined,
+      endsAt: dto.endsAt ? new Date(dto.endsAt) : undefined,
+    };
+  }
+
+  private toUpdateData(dto: UpdateBannerDto): Prisma.BannerUpdateInput {
+    return {
+      ...(dto.placement !== undefined ? { placement: dto.placement } : {}),
+      ...(dto.title !== undefined ? { title: dto.title } : {}),
+      ...(dto.sponsorName !== undefined ? { sponsorName: dto.sponsorName } : {}),
+      ...(dto.imageUrl !== undefined ? { imageUrl: dto.imageUrl } : {}),
+      ...(dto.linkUrl !== undefined ? { linkUrl: dto.linkUrl } : {}),
+      ...(dto.altText !== undefined ? { altText: dto.altText } : {}),
+      ...(dto.sortOrder !== undefined ? { sortOrder: dto.sortOrder } : {}),
+      ...(dto.isActive !== undefined ? { isActive: dto.isActive } : {}),
+      ...(dto.startsAt !== undefined
+        ? { startsAt: dto.startsAt ? new Date(dto.startsAt) : null }
+        : {}),
+      ...(dto.endsAt !== undefined
+        ? { endsAt: dto.endsAt ? new Date(dto.endsAt) : null }
+        : {}),
+    };
   }
 
   private async ensureExists(id: string) {

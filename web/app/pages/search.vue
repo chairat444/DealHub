@@ -27,6 +27,8 @@
       </select>
     </div>
 
+    <AdSlot placement="SEARCH_TOP" wrapper-class="mb-6" />
+
     <!-- Results -->
     <div v-if="pending" class="text-center py-20 text-content-muted">กำลังค้นหา...</div>
     <div v-else-if="!results?.items?.length" class="text-center py-20">
@@ -58,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+import AdSlot from '~/components/AdSlot.vue'
 import type { PaginatedResponse, Product } from '~/types'
 
 const route = useRoute()

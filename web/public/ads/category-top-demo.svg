@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="200" viewBox="0 0 1200 200" role="img" aria-label="Deals Lazada">
+  <defs>
+    <linearGradient id="bg-category" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0F146D"/>
+      <stop offset="100%" stop-color="#1A3A8F"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="200" fill="url(#bg-category)"/>
+  <text x="48" y="90" fill="#ffffff" font-family="Arial, sans-serif" font-size="42" font-weight="700">Top deals in this category</text>
+  <text x="48" y="130" fill="#9DB4FF" font-family="Arial, sans-serif" font-size="24">Free shipping + extra coupons</text>
+  <rect x="48" y="148" width="180" height="38" rx="6" fill="#FF6B00"/>
+  <text x="72" y="174" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="600">View deals</text>
+  <text x="1040" y="174" fill="#ffffff" font-family="Arial, sans-serif" font-size="32" font-weight="700">Lazada</text>
+</svg>

@@ -2,6 +2,7 @@ import { BannerPlacement, PrismaClient, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { demoProducts } from './demo-products';
 import { boardDemoUsers, boardGroupDefs, boardPostSeeds } from './demo-board';
+import { DEMO_AD_SEEDS, DEMO_AD_CAROUSEL } from './demo-ads';
 import { generateUniqueUsername, resolveTier } from '../src/modules/members/constants/member.constants';
 
 const prisma = new PrismaClient();
@@ -272,22 +273,57 @@ async function main() {
     });
   }
 
-  const heroBannerCount = await prisma.banner.count({ where: { placement: BannerPlacement.HERO } });
-  if (heroBannerCount === 0) {
-    await prisma.banner.create({
-      data: {
-        placement: BannerPlacement.HERO,
-        title: 'DealHub TH',
-        imageUrl: '/hero-banner.png',
-        linkUrl: '/search',
-        altText: 'DealHub TH — เทียบราคา Shopee Lazada TikTok Shop',
-        sortOrder: 0,
-        isActive: true,
-      },
+  console.log('📢 Seeding demo ads...');
+  for (const ad of DEMO_AD_SEEDS) {
+    const existing = await prisma.banner.findFirst({
+      where: { placement: ad.placement, sortOrder: ad.sortOrder },
+      orderBy: { createdAt: 'asc' },
     });
+    if (existing) {
+      await prisma.banner.update({
+        where: { id: existing.id },
+        data: {
+          title: ad.title,
+          sponsorName: ad.sponsorName,
+          imageUrl: ad.imageUrl,
+          linkUrl: ad.linkUrl,
+          altText: ad.altText,
+          isActive: true,
+        },
+      });
+    } else {
+      await prisma.banner.create({
+        data: { ...ad, isActive: true },
+      });
+    }
+  }
+
+  // โฆษณาตัวที่ 2 สำหรับ HOME_MID (carousel demo)
+  for (const ad of DEMO_AD_CAROUSEL) {
+    const existing = await prisma.banner.findFirst({
+      where: { placement: ad.placement, sortOrder: ad.sortOrder },
+    });
+    if (existing) {
+      await prisma.banner.update({
+        where: { id: existing.id },
+        data: {
+          title: ad.title,
+          sponsorName: ad.sponsorName,
+          imageUrl: ad.imageUrl,
+          linkUrl: ad.linkUrl,
+          altText: ad.altText,
+          isActive: true,
+        },
+      });
+    } else {
+      await prisma.banner.create({
+        data: { ...ad, isActive: true },
+      });
+    }
   }
 
   console.log('✅ Seed completed!');
+  console.log(`   Ads: ${DEMO_AD_SEEDS.length} placements + HOME_MID carousel`);
   console.log(`   Products: ${demoProducts.length} (${trendingCount} trending, ${topSellingCount} top-selling)`);
   console.log(`   Board: ${boardGroupDefs.length} groups, ${boardPostSeeds.length} posts`);
   console.log(`   Homepage: Flash Sale 6 · มาแรง 6 · ขายดี 10 · แนะนำ 3`);

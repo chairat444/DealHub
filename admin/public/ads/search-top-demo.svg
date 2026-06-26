@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="200" viewBox="0 0 1200 200" role="img" aria-label="Compare prices DealHub">
+  <defs>
+    <linearGradient id="bg-search" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="200" fill="url(#bg-search)"/>
+  <text x="48" y="85" fill="#FFD600" font-family="Arial, sans-serif" font-size="40" font-weight="700">Compare before you buy</text>
+  <text x="48" y="125" fill="#cccccc" font-family="Arial, sans-serif" font-size="24">Shopee · Lazada · TikTok Shop</text>
+  <rect x="48" y="145" width="200" height="40" rx="6" fill="#EE4D2D"/>
+  <text x="72" y="172" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="600">DealHub TH</text>
+</svg>

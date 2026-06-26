@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-label="DealHub compare prices">
+  <defs>
+    <linearGradient id="search-bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1a100d"/>
+      <stop offset="40%" stop-color="#2f1c17"/>
+      <stop offset="100%" stop-color="#EE4D2D"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="300" fill="url(#search-bg)"/>
+  <circle cx="1050" cy="150" r="130" fill="#FFD600" opacity="0.08"/>
+  <g transform="translate(900,75)" opacity="0.9">
+    <circle cx="60" cy="60" r="48" fill="none" stroke="#FFD600" stroke-width="8"/>
+    <line x1="96" y1="96" x2="130" y2="130" stroke="#FFD600" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <text x="56" y="108" fill="#FFD600" font-family="Arial,sans-serif" font-size="20" font-weight="700" letter-spacing="1.5">DEALHUB TH</text>
+  <text x="56" y="162" fill="#ffffff" font-family="Arial,sans-serif" font-size="46" font-weight="700">Compare before you buy</text>
+  <text x="56" y="206" fill="rgba(255,255,255,0.82)" font-family="Arial,sans-serif" font-size="24">Find the best price across every marketplace</text>
+  <rect x="56" y="232" width="200" height="44" rx="8" fill="#FFD600"/>
+  <text x="84" y="261" fill="#C13515" font-family="Arial,sans-serif" font-size="20" font-weight="700">Compare prices</text>
+</svg>
